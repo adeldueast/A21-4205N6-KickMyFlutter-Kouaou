@@ -1,6 +1,9 @@
 // LOGIN PAGE
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:kick_my_flutter/transfer.dart';
+import 'package:kick_my_flutter/lib_http.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -9,6 +12,43 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen>
     with TickerProviderStateMixin {
+  late String signupUsername;
+  late String signupPW1;
+  late String signupPW2;
+
+void httpSignup() async {
+
+  try{
+    SignupRequest request = SignupRequest();
+    request.username = signupUsername;
+    request.password = signupPW1;
+   var response =  await signup(request);
+   // send to acceuil
+   print(response);
+    Navigator.of(context).pushNamed(
+      "/screen2",
+    );
+  }
+  on DioError catch (e){
+    String message = e.response!.data;
+  if(message=="BadCredentialsException"){
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+            "Username already taken")));
+  }else{
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+            "An error just occured")));
+  }
+
+  print(e);
+
+  }
+
+}
+
+
+
   Widget HomePage() {
     return SingleChildScrollView(
       child: Container(
@@ -162,7 +202,7 @@ class _LoginScreenState extends State<LoginScreen>
                   child: new Padding(
                     padding: const EdgeInsets.only(left: 40.0),
                     child: new Text(
-                      "EMAIL",
+                      "Username",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.redAccent,
@@ -192,11 +232,14 @@ class _LoginScreenState extends State<LoginScreen>
                 children: <Widget>[
                   new Expanded(
                     child: TextField(
-                      obscureText: true,
+                      onChanged: (text) {
+                        this.signupUsername = text;
+                      },
+                      obscureText: false,
                       textAlign: TextAlign.left,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'email@domain.com',
+                        hintText: 'username',
                         hintStyle: TextStyle(color: Colors.grey),
                       ),
                     ),
@@ -243,6 +286,9 @@ class _LoginScreenState extends State<LoginScreen>
                 children: <Widget>[
                   new Expanded(
                     child: TextField(
+                      onChanged: (text) {
+                        this.signupPW1 = text;
+                      },
                       obscureText: true,
                       textAlign: TextAlign.left,
                       decoration: InputDecoration(
@@ -294,6 +340,9 @@ class _LoginScreenState extends State<LoginScreen>
                 children: <Widget>[
                   new Expanded(
                     child: TextField(
+                      onChanged: (text) {
+                        this.signupPW2 = text;
+                      },
                       obscureText: true,
                       textAlign: TextAlign.left,
                       decoration: InputDecoration(
@@ -341,7 +390,19 @@ class _LoginScreenState extends State<LoginScreen>
                         borderRadius: new BorderRadius.circular(30.0),
                       ),
                       color: Colors.redAccent,
-                      onPressed: () => {},
+                      onPressed: () {
+                        //validation de mot de passes 1 & 2
+                        if (this.signupPW1 != this.signupPW2)
+                          {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                                    "Make sure both password are identical")));
+                            return;
+                          }
+
+                        //requet signup
+                        httpSignup();
+                      },
                       child: new Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: 20.0,
@@ -398,7 +459,7 @@ class _LoginScreenState extends State<LoginScreen>
                   child: new Padding(
                     padding: const EdgeInsets.only(left: 40.0),
                     child: new Text(
-                      "EMAIL",
+                      "Username",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.redAccent,
@@ -428,11 +489,11 @@ class _LoginScreenState extends State<LoginScreen>
                 children: <Widget>[
                   new Expanded(
                     child: TextField(
-                      obscureText: true,
+                      obscureText: false,
                       textAlign: TextAlign.left,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'email@domain.com',
+                        hintText: 'username',
                         hintStyle: TextStyle(color: Colors.grey),
                       ),
                     ),
@@ -528,8 +589,11 @@ class _LoginScreenState extends State<LoginScreen>
                       color: Colors.redAccent,
 
                       // ON PRESS TO PAGE ACCUEUIL NAVIG.ROUTE SCREEN2
-                      onPressed: () =>
-                          {Navigator.of(context).pushNamed("/screen2",)},
+                      onPressed: () => {
+                        Navigator.of(context).pushNamed(
+                          "/screen2",
+                        )
+                      },
                       child: new Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: 20.0,

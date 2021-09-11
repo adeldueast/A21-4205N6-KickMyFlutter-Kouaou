@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
 
-      home: LoginScreen(),
+     initialRoute: "/screen1",
       routes: <String, WidgetBuilder>{
         "/screen1": (BuildContext context) => new LoginScreen(),
         "/screen2": (BuildContext context) => new Acceuil(),
