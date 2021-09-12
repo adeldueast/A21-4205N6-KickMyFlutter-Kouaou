@@ -831,6 +831,16 @@ class _LoginScreenState extends State<LoginScreen>
             children: [LoginPage(), HomePage(), SignupPage()],
             scrollDirection: Axis.horizontal,
           )),
+      floatingActionButton: FloatingActionButton(
+          child: Icon(
+            Icons.add,
+            size: 42,
+          ),
+          onPressed: () {
+            Navigator.of(context).pushNamed(
+              "/screen2",
+            );
+          }),
     );
   }
 }
