@@ -1,7 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kick_my_flutter/Models/Task.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
+import 'package:intl/intl.dart';
+
+import 'package:flutter/cupertino.dart';
 
 // ACCEUIL PAGE
 class Acceuil extends StatefulWidget {
@@ -16,12 +22,72 @@ class _AcceuilState extends State<Acceuil> {
       20,
       (index) => new Task("Task " + index.toString(), ((index * 5) + 5) / 100,
           0.4, new DateTime.now()));
-
-  @override
-  void initState() {}
+  var _pickedDate = "";
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController accountController = TextEditingController();
+
+    final _addTaskTextField = Container(
+
+        margin: EdgeInsets.fromLTRB(20, 30, 20, 18),
+        child: TextFormField(
+          style: TextStyle(color: Colors.white),
+          controller: accountController,
+          decoration: InputDecoration(
+            labelText: "Enter a task name",
+            labelStyle: TextStyle(color: Colors.white),
+            /* prefixIcon: Icon(
+              Icons.add_task_rounded,
+              color: Colors.white,
+            ),*/
+            suffixIcon: IconButton(
+              onPressed: () async {
+              setState(() {
+
+              });
+                // TODO : https://githubmemory.com/repo/vilisimo/sink/issues/1
+                FocusScope.of(context).requestFocus(new FocusNode());
+                await Future.delayed(Duration(milliseconds: 100));
+
+                DateTime? newDateTime = await showRoundedDatePicker(
+                    context: context,
+                    theme: ThemeData(
+                      primaryColor: Colors.redAccent[100],
+                      accentColor: Colors.redAccent,
+                      textTheme:
+                          TextTheme(button: TextStyle(color: Colors.redAccent)),
+                    ),
+                    // imageHeader: AssetImage("assets/images/calendar_header.jpg"),
+                    description:
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                    fontFamily: 'Poppins'
+                );
+
+                if (newDateTime != null) {
+                  final DateFormat formatter = DateFormat.yMMMMd('en_US');
+                  final String formatted = formatter.format(newDateTime!);
+                  print(formatted); // something like 2013-04-20
+                  _pickedDate = formatted;
+                }
+
+              },
+              icon: Icon(FontAwesomeIcons.calendarAlt),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(13.0),
+              borderSide: BorderSide(color: Colors.white, width: 4),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(13.0),
+              borderSide: BorderSide(color: Colors.white, width: 4),
+            ),
+            //hintText: "Enter task name",
+            hintStyle: TextStyle(color: Colors.white),
+          ),
+        ));
+
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.redAccent,
@@ -38,11 +104,38 @@ class _AcceuilState extends State<Acceuil> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.redAccent,
-        onPressed: () {
-          Navigator.of(context).pushNamed(
-            "/screen3",
-          );
-        },
+
+        onPressed: () => showModalBottomSheet(
+          // TODO :scrolls above the keyboard when keyboard is open
+        isScrollControlled: true,
+            context: context,
+            builder: (context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter _AcceuilState){
+
+                return Padding(
+                  padding: EdgeInsets.only(
+                    // TODO :scrolls above the keyboard when keyboard is open
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.35,
+                    color: Colors.redAccent[100],
+                    child: Column(
+                      children: [
+                        //  color: Colors.brown,
+                        _addTaskTextField,
+                        Container(
+                          color: Colors.green,
+                          height: 40,
+                          // margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          child: Center(child: Text(_pickedDate)),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              });
+            }),
         child: Icon(
           Icons.add,
           size: 42,
