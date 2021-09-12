@@ -12,42 +12,62 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen>
     with TickerProviderStateMixin {
-  late String signupUsername;
-  late String signupPW1;
-  late String signupPW2;
+  String signupUsername = "";
+  String signupPW1 = "";
+  String signupPW2 = "";
 
-void httpSignup() async {
+  String signinUsername = "";
+  String signinPassword = "";
 
-  try{
-    SignupRequest request = SignupRequest();
-    request.username = signupUsername;
-    request.password = signupPW1;
-   var response =  await signup(request);
-   // send to acceuil
-   print(response);
-    Navigator.of(context).pushNamed(
-      "/screen2",
-    );
+  void httpSignup() async {
+    try {
+      SignupRequest request = SignupRequest();
+      request.username = signupUsername;
+      request.password = signupPW1;
+      var response = await signup(request);
+      // send to acceuil
+
+      Navigator.of(context).pushNamed(
+        "/screen2",
+      );
+    } on DioError catch (e) {
+      print(e.response);
+      print(e.message);
+
+      String message = e.response!.data;
+      if (message == "BadCredentialsException") {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Username already taken")));
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("An error just occured")));
+      }
+
+      print(e);
+    }
   }
-  on DioError catch (e){
-    String message = e.response!.data;
-  if(message=="BadCredentialsException"){
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
-            "Username already taken")));
-  }else{
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
-            "An error just occured")));
+
+  void httpSignin() async {
+    try {
+      SigninRequest request = SigninRequest();
+      request.username = signinUsername;
+      request.password = signinPassword;
+      var response = await signin(request);
+
+      // send to acceuil
+      Navigator.of(context).pushNamed(
+        "/screen2",
+      );
+    } on DioError catch (e) {
+      // TODO
+
+      print(e.response);
+      print(e.message);
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Wrong username or password")));
+    }
   }
-
-  print(e);
-
-  }
-
-}
-
-
 
   Widget HomePage() {
     return SingleChildScrollView(
@@ -392,24 +412,22 @@ void httpSignup() async {
                       color: Colors.redAccent,
                       onPressed: () {
                         //validation de mot de passes 1 & 2
-                        if (this.signupPW1 != this.signupPW2)
-                          {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(
-                                    "Make sure both password are identical")));
-                            return;
-                          }
+                        if (this.signupPW1 != this.signupPW2) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                  "Make sure both password are identical")));
+                          return;
+                        }
 
                         //requet signup
                         httpSignup();
                       },
                       child: new Container(
                         padding: const EdgeInsets.symmetric(
-                          vertical: 20.0,
                           horizontal: 20.0,
+                          vertical: 20.0,
                         ),
                         child: new Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             new Expanded(
                               child: Text(
@@ -421,6 +439,7 @@ void httpSignup() async {
                               ),
                             ),
                           ],
+                          mainAxisAlignment: MainAxisAlignment.center,
                         ),
                       ),
                     ),
@@ -490,6 +509,9 @@ void httpSignup() async {
                   new Expanded(
                     child: TextField(
                       obscureText: false,
+                      onChanged: (text) {
+                        signinUsername = text;
+                      },
                       textAlign: TextAlign.left,
                       decoration: InputDecoration(
                         border: InputBorder.none,
@@ -540,6 +562,9 @@ void httpSignup() async {
                 children: <Widget>[
                   new Expanded(
                     child: TextField(
+                      onChanged: (text) {
+                        signinPassword = text;
+                      },
                       obscureText: true,
                       textAlign: TextAlign.left,
                       decoration: InputDecoration(
@@ -589,10 +614,19 @@ void httpSignup() async {
                       color: Colors.redAccent,
 
                       // ON PRESS TO PAGE ACCUEUIL NAVIG.ROUTE SCREEN2
-                      onPressed: () => {
-                        Navigator.of(context).pushNamed(
-                          "/screen2",
-                        )
+                      onPressed: () {
+                        if (this.signinUsername.isEmpty ||
+                            this.signinUsername == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("Username field is empty")));
+                          return;
+                        } else if (this.signinPassword.isEmpty ||
+                            this.signinPassword == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("Password field is empty")));
+                          return;
+                        }
+                        httpSignin();
                       },
                       child: new Container(
                         padding: const EdgeInsets.symmetric(

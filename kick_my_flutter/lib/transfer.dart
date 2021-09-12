@@ -1,6 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'transfer.g.dart';
 
+
+// TODO :  SignUP REQUEST returns a RESPONSE
 @JsonSerializable()
 class SignupRequest {
   SignupRequest();
@@ -33,4 +35,39 @@ class SignupResponse {
   /// to JSON. The implementation simply calls the private, generated
   /// helper method `_$UserToJson`.
   Map<String, dynamic> toJson() => _$SignupResponseToJson(this);
+}
+
+
+// TODO :  Signin  REQUEST / RESPONSE
+@JsonSerializable()
+class SigninRequest extends SignupRequest{
+
+SigninRequest();
+  /// A necessary factory constructor for creating a new User instance
+  /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
+  /// The constructor is named after the source class, in this case, User.
+  factory SigninRequest.fromJson(Map<String, dynamic> json) => _$SigninRequestFromJson(json);
+
+  /// `toJson` is the convention for a class to declare support for serialization
+  /// to JSON. The implementation simply calls the private, generated
+  /// helper method `_$UserToJson`.
+  Map<String, dynamic> toJson() => _$SigninRequestToJson(this);
+}
+
+@JsonSerializable()
+class SigninResponse {
+
+  SigninResponse();
+  String username = "";
+
+  /// A necessary factory constructor for creating a new User instance
+  /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
+  /// The constructor is named after the source class, in this case, User.
+  factory SigninResponse.fromJson(Map<String, dynamic> json) => _$SigninResponseFromJson(json);
+
+  /// `toJson` is the convention for a class to declare support for serialization
+  /// to JSON. The implementation simply calls the private, generated
+  /// helper method `_$UserToJson`.
+  Map<String, dynamic> toJson() => _$SigninResponseToJson(this);
+
 }

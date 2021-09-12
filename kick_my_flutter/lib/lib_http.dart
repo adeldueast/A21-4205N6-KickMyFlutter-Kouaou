@@ -14,8 +14,8 @@ class SingletonDio {
 }
 
 Future<String> cookie() async {
-  var response =
-      await SingletonDio.getDio().get('http://exercices-web.herokuapp.com/exos/cookie/echo');
+  var response = await SingletonDio.getDio()
+      .get('http://exercices-web.herokuapp.com/exos/cookie/echo');
   print(response);
   return response.data;
 }
@@ -24,12 +24,28 @@ Future<SignupResponse> signup(SignupRequest request) async {
   try {
     var dio = Dio();
     var response = await SingletonDio.getDio().post(
-        'http://kickmyb-server.herokuapp.com/api/id/signup',
+        'https://kickmyb-server.herokuapp.com/api/id/signup',
         data: request);
     print(response);
+    print(response.statusCode);
     return SignupResponse.fromJson(response.data);
   } catch (e) {
-    print(e);
+
+    throw (e);
+  }
+}
+
+Future<SigninResponse> signin(SigninRequest request) async {
+  try {
+    var dio = Dio();
+    var response = await dio.post(
+        'https://kickmyb-server.herokuapp.com/api/id/signin',
+        data: request);
+    print(response);
+    print(response.statusCode);
+    return SigninResponse.fromJson(response.data);
+  }  catch (e) {
+
     throw (e);
   }
 }
