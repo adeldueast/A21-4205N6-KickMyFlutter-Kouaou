@@ -25,8 +25,8 @@ class _LoginScreenState extends State<LoginScreen>
       request.username = signupUsername;
       request.password = signupPW1;
       var response = await signup(request);
-      // send to acceuil
 
+      // send to acceuil
       Navigator.of(context).pushNamed(
         "/screen2",
       );

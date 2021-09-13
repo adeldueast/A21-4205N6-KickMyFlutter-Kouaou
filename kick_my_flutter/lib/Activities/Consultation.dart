@@ -6,10 +6,6 @@ class Consultation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final baseTextStyle = const TextStyle(fontFamily: 'Poppins');
-
-    final headerTextStyle = baseTextStyle.copyWith(
-        color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.w600);
 
     return Scaffold(
       appBar: AppBar(

@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:kick_my_flutter/Models/Task.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
-
-import 'package:flutter/cupertino.dart';
 
 // ACCEUIL PAGE
 class Acceuil extends StatefulWidget {
@@ -22,71 +21,186 @@ class _AcceuilState extends State<Acceuil> {
       20,
       (index) => new Task("Task " + index.toString(), ((index * 5) + 5) / 100,
           0.4, new DateTime.now()));
-  var _pickedDate = "";
+
+  Widget _addTaskButton(String newTaskName,DateTime newTaskDate, String newTaskDateText,) {
+
+    return MaterialButton(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(26)),
+      color: Colors.redAccent,
+      onPressed: () {
+
+
+        Task newTask =   Task(newTaskName, 0, 0,newTaskDate );
+        print(newTask.toString());
+        if(newTaskDate==null|| newTaskName.isEmpty || newTaskDateText.isEmpty ){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+                  "Make sure you pickedd a name anda  date")));
+
+        }else{
+          print("creating new task named --->>"+ newTaskName );
+          setState(() {
+            _listeTask.add(newTask);
+            Navigator.pop(context);
+          });
+        }
+
+      },
+      child: Text("Add task",
+          style: TextStyle(
+              fontSize: 34,
+              color: Colors.white,
+              decoration: TextDecoration.underline)),
+    );
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController accountController = TextEditingController();
 
-    final _addTaskTextField = Container(
 
-        margin: EdgeInsets.fromLTRB(20, 30, 20, 18),
-        child: TextFormField(
-          style: TextStyle(color: Colors.white),
-          controller: accountController,
-          decoration: InputDecoration(
-            labelText: "Enter a task name",
-            labelStyle: TextStyle(color: Colors.white),
-            /* prefixIcon: Icon(
-              Icons.add_task_rounded,
-              color: Colors.white,
-            ),*/
-            suffixIcon: IconButton(
-              onPressed: () async {
-              setState(() {
 
-              });
-                // TODO : https://githubmemory.com/repo/vilisimo/sink/issues/1
-                FocusScope.of(context).requestFocus(new FocusNode());
-                await Future.delayed(Duration(milliseconds: 100));
+    Future<DateTime?> _selectDate(BuildContext context) async {
+      FocusScope.of(context).requestFocus(new FocusNode());
+      await Future.delayed(Duration(milliseconds: 90));
 
-                DateTime? newDateTime = await showRoundedDatePicker(
-                    context: context,
-                    theme: ThemeData(
-                      primaryColor: Colors.redAccent[100],
-                      accentColor: Colors.redAccent,
-                      textTheme:
-                          TextTheme(button: TextStyle(color: Colors.redAccent)),
-                    ),
-                    // imageHeader: AssetImage("assets/images/calendar_header.jpg"),
-                    description:
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                    fontFamily: 'Poppins'
-                );
-
-                if (newDateTime != null) {
-                  final DateFormat formatter = DateFormat.yMMMMd('en_US');
-                  final String formatted = formatter.format(newDateTime!);
-                  print(formatted); // something like 2013-04-20
-                  _pickedDate = formatted;
-                }
-
-              },
-              icon: Icon(FontAwesomeIcons.calendarAlt),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(13.0),
-              borderSide: BorderSide(color: Colors.white, width: 4),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(13.0),
-              borderSide: BorderSide(color: Colors.white, width: 4),
-            ),
-            //hintText: "Enter task name",
-            hintStyle: TextStyle(color: Colors.white),
+      DateTime? newDateTime = await showRoundedDatePicker(
+          context: context,
+          theme: ThemeData(
+            primaryColor: Colors.redAccent[100],
+            accentColor: Colors.redAccent,
+            textTheme: TextTheme(button: TextStyle(color: Colors.redAccent)),
           ),
-        ));
+          description:
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+          fontFamily: 'Poppins');
+      if (newDateTime != null) {
+        final DateFormat formatter = DateFormat.yMMMMd('en_US');
+        final String formatted = formatter.format(newDateTime);
+        // print(formatted); // something like 2013-04-20
 
+        return newDateTime;
+      }
+      return newDateTime;
+    }
+
+    void _showModalBottomSheet() {
+       DateTime? newTaskDate = DateTime.now();
+      late String newTaskName = "";
+      late String newTaskDateText="";
+      showModalBottomSheet(
+          isScrollControlled: true,
+          context: context,
+          builder: (BuildContext context) {
+
+            return StatefulBuilder(builder: (context, state) {
+              return GestureDetector(
+                onTap: () {
+                  //Permet de fermer le keyboard lorsqu'on clique ailleurs du TextField
+                  FocusScopeNode currentFocus = FocusScope.of(context);
+                  if (!currentFocus.hasPrimaryFocus) {
+                    currentFocus.unfocus();
+                  }
+                },
+                child: Padding(
+                  // TODO : BottomSheet reste par dessus le clavier sinon pas derreur mais il est caché derrière le keyboard
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  //BottomSheet Container
+                  child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      color: Colors.redAccent[100],
+                      height: MediaQuery.of(context).size.height *0.34,
+                      child: Column(
+                        children: [
+                          // Title Create a task
+                          Container(
+                            child: _addTaskButton(newTaskName, newTaskDate!,newTaskDateText),
+                          ),
+                          //ROW TextField & Calendar
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 19),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 4,
+                                  child: TextField(
+                                    onChanged: (text){newTaskName=text;print("text changing ... task name "+ newTaskName );},
+                                    decoration: InputDecoration(
+                                      labelText: 'Task name',
+                                      labelStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w300),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(13),
+                                          borderSide: BorderSide(
+                                              color: Colors.white, width: 5)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(13),
+                                          borderSide: BorderSide(
+                                              color: Colors.white, width: 5)),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 19),
+                                    padding: EdgeInsets.only(bottom: 14),
+                                    child: IconButton(
+                                      iconSize: 60,
+                                      icon:
+                                          Icon(FontAwesomeIcons.calendarCheck),
+                                      color: Colors.white,
+                                      onPressed: ()   {
+                                        state(() async {
+
+                                          newTaskDate   = (await  _selectDate(context))! ;
+                                          final DateFormat formatter = DateFormat.yMMMMd('en_US');
+                                          final String formatted = formatter.format(newTaskDate!);
+                                          newTaskDateText = formatted;
+
+                                          print("new task --->>"+ newTaskName + " " +formatted );
+
+                                        });
+
+
+                                      },
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          //Date : 20 September 2021
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(left: 18),
+                              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+
+                              alignment: Alignment.centerLeft,
+                              // color:Colors.blue,
+                              child: Text("Date : " + newTaskDateText ,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 26,
+                                      fontStyle: FontStyle.italic)),
+                            ),
+                          )
+                        ],
+                      )),
+                ),
+              );
+            });
+          });
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -96,46 +210,11 @@ class _AcceuilState extends State<Acceuil> {
       ),
       body: Container(
         color: Colors.white,
-        child: new Column(
-          children: [
-            new AcceuilBody(_listeTask),
-          ],
-        ),
+        child: new AcceuilBody(_listeTask),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.redAccent,
-
-        onPressed: () => showModalBottomSheet(
-          // TODO :scrolls above the keyboard when keyboard is open
-        isScrollControlled: true,
-            context: context,
-            builder: (context) {
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter _AcceuilState){
-
-                return Padding(
-                  padding: EdgeInsets.only(
-                    // TODO :scrolls above the keyboard when keyboard is open
-                      bottom: MediaQuery.of(context).viewInsets.bottom),
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.35,
-                    color: Colors.redAccent[100],
-                    child: Column(
-                      children: [
-                        //  color: Colors.brown,
-                        _addTaskTextField,
-                        Container(
-                          color: Colors.green,
-                          height: 40,
-                          // margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: Center(child: Text(_pickedDate)),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              });
-            }),
+        onPressed: _showModalBottomSheet,
         child: Icon(
           Icons.add,
           size: 42,
@@ -306,3 +385,5 @@ class TaskRow extends StatelessWidget {
     );
   }
 }
+
+
