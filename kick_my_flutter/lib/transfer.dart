@@ -78,7 +78,7 @@ class AddTaskRequest{
 
   AddTaskRequest();
   String? name;
-  DateTime? date;
+  DateTime? deadline;
 
 
   /// A necessary factory constructor for creating a new User instance

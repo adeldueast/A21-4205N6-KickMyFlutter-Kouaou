@@ -47,11 +47,12 @@ Map<String, dynamic> _$SigninResponseToJson(SigninResponse instance) =>
 AddTaskRequest _$AddTaskRequestFromJson(Map<String, dynamic> json) =>
     AddTaskRequest()
       ..name = json['name'] as String?
-      ..date =
-          json['date'] == null ? null : DateTime.parse(json['date'] as String);
+      ..deadline = json['deadline'] == null
+          ? null
+          : DateTime.parse(json['deadline'] as String);
 
 Map<String, dynamic> _$AddTaskRequestToJson(AddTaskRequest instance) =>
     <String, dynamic>{
       'name': instance.name,
-      'date': instance.date?.toIso8601String(),
+      'deadline': instance.deadline?.toIso8601String(),
     };

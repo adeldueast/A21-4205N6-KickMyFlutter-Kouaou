@@ -47,5 +47,18 @@ Future<SigninResponse> signin(SigninRequest request) async {
     throw (e);
   }
 }
+addTask(AddTaskRequest request) async {
+  try {
+    var dio = Dio();
+    var response = await dio.post(
+        'https://kickmyb-server.herokuapp.com/api/add',
+        data: request);
+
+    print(response);
+    print(response.statusCode.toString() + "added a task successfully");
+  } catch (e) {
+    throw(e);
+  }
+}
 
 

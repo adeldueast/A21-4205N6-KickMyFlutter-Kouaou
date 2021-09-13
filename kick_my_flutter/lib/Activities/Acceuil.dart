@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -7,7 +8,8 @@ import 'package:kick_my_flutter/Models/Task.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
-
+import 'package:kick_my_flutter/lib_http.dart';
+import 'package:kick_my_flutter/transfer.dart';
 // ACCEUIL PAGE
 class Acceuil extends StatefulWidget {
   const Acceuil({Key? key}) : super(key: key);
@@ -41,10 +43,25 @@ class _AcceuilState extends State<Acceuil> {
         }else{
           print("creating new task named --->>"+ newTaskName );
           setState(() {
+
+            AddTaskRequest req = AddTaskRequest();
+            req.name=newTaskName;
+            req.deadline = newTaskDate;
+
+            try {
+              addTask(req);
+            }on DioError catch(e){
+
+
+
+              print(e.response!.statusMessage);
+              print(e.response!.statusCode);
+            }
             _listeTask.add(newTask);
             Navigator.pop(context);
           });
         }
+
 
       },
       child: Text("Add task",
