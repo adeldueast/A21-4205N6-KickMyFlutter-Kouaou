@@ -2,6 +2,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:kick_my_flutter/Models/Session.dart';
 import 'package:kick_my_flutter/transfer.dart';
 import 'package:kick_my_flutter/lib_http.dart';
 
@@ -27,6 +28,7 @@ class _LoginScreenState extends State<LoginScreen>
 
       var response = await signup(request);
 
+      Session.shared.username=response.username;
       // send to acceuil
       Navigator.of(context).pushNamed(
         "/screen2",
@@ -54,6 +56,7 @@ class _LoginScreenState extends State<LoginScreen>
       request.username = signinUsername;
       request.password = signinPassword;
       var response = await signin(request);
+      Session.shared.username=response.username;
 
       // send to acceuil
       Navigator.of(context).pushNamed(

@@ -1,9 +1,12 @@
+import 'dart:ui';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:kick_my_flutter/Models/Session.dart';
 import 'package:kick_my_flutter/Models/Task.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
@@ -27,7 +30,7 @@ class Acceuil extends StatefulWidget {
 class _AcceuilState extends State<Acceuil> {
   List<Task> _listeTask = new List<Task>.generate(
       20,
-      (index) => new Task("Task " + index.toString(), ((index * 5) + 5) / 100,
+      (index) => new Task ("Task " + index.toString(), ((index * 5) + 5) / 100,
           0.4, new DateTime.now()));
 
   Widget _addTaskButton(
@@ -51,7 +54,7 @@ class _AcceuilState extends State<Acceuil> {
 
           AddTaskRequest req = AddTaskRequest();
           req.name = newTaskName;
-         // req.deadline = newTaskDate;
+          // req.deadline = newTaskDate;
 
           try {
             addTask(req);
@@ -215,6 +218,16 @@ class _AcceuilState extends State<Acceuil> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: ClipRRect(
+          borderRadius: BorderRadius.horizontal(right: Radius.circular(35)),
+          child: Drawer(
+
+            child: ListView(
+              children: [
+                UserAccountsDrawerHeader(decoration: BoxDecoration(color: Colors.redAccent), accountName: Text(Session.shared.username.toString()), accountEmail: Text(Session.shared.username.toString()+"@gmail.com"),currentAccountPicture :Image.network("https://cdn-icons-png.flaticon.com/512/3135/3135715.png"))
+              ],
+            ),
+          )),
       appBar: AppBar(
         backgroundColor: Colors.redAccent,
         automaticallyImplyLeading: false,
@@ -235,9 +248,11 @@ class _AcceuilState extends State<Acceuil> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
-       // clipBehavior:Clip.antiAliasWithSaveLayer,
+        // clipBehavior:Clip.antiAliasWithSaveLayer,
         notchMargin: 4.0,
-        child: Container(height: 40,),
+        child: Container(
+          height: 40,
+        ),
       ),
     );
   }

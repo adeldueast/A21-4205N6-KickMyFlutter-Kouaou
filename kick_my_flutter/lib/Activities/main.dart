@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: "TodoApp",
      theme: ThemeData(fontFamily: "Poppins"),
      initialRoute: "/screen1",
