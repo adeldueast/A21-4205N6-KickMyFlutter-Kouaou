@@ -30,9 +30,10 @@ class _LoginScreenState extends State<LoginScreen>
 
       Session.shared.username=response.username;
       // send to acceuil
-      Navigator.of(context).pushNamed(
-        "/screen2",
-      );
+
+      Navigator.of(context).pushReplacementNamed("/screen2");
+
+
     } on DioError catch (e) {
 
       print(e.response);
@@ -59,9 +60,8 @@ class _LoginScreenState extends State<LoginScreen>
       Session.shared.username=response.username;
 
       // send to acceuil
-      Navigator.of(context).pushNamed(
-        "/screen2",
-      );
+
+      Navigator.of(context).pushReplacementNamed("/screen2");
     } on DioError catch (e) {
       // TODO
 

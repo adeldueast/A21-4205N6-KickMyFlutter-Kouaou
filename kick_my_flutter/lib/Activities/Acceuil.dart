@@ -1,27 +1,22 @@
 import 'dart:ui';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:kick_my_flutter/Models/Session.dart';
+import 'package:kick_my_flutter/CustomDrawer.dart';
 import 'package:kick_my_flutter/Models/Task.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:kick_my_flutter/lib_http.dart';
 import 'package:kick_my_flutter/transfer.dart';
 
-//TODO : difference entre Dio et simple http?
-//TODO : 403 DioErrorType http 403?
-//TODO : how am i suppose to initialize variables? null? Ex Date line 34 && 79; Or in constructor of Task
-//TODO : lib_http why just trycatch again in Signin Signup in Login??
+
 
 // ACCEUIL PAGE
 class Acceuil extends StatefulWidget {
-  const Acceuil({Key? key}) : super(key: key);
+  const Acceuil({Key? key,}) : super(key: key);
 
   @override
   _AcceuilState createState() => _AcceuilState();
@@ -75,6 +70,8 @@ class _AcceuilState extends State<Acceuil> {
               decoration: TextDecoration.underline)),
     );
   }
+
+
 
   Future<DateTime?> _selectDate(BuildContext context) async {
     FocusScope.of(context).requestFocus(new FocusNode());
@@ -218,16 +215,8 @@ class _AcceuilState extends State<Acceuil> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: ClipRRect(
-          borderRadius: BorderRadius.horizontal(right: Radius.circular(35)),
-          child: Drawer(
 
-            child: ListView(
-              children: [
-                UserAccountsDrawerHeader(decoration: BoxDecoration(color: Colors.redAccent), accountName: Text(Session.shared.username.toString()), accountEmail: Text(Session.shared.username.toString()+"@gmail.com"),currentAccountPicture :Image.network("https://cdn-icons-png.flaticon.com/512/3135/3135715.png"))
-              ],
-            ),
-          )),
+      drawer:CustomDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.redAccent,
         automaticallyImplyLeading: false,
@@ -257,6 +246,11 @@ class _AcceuilState extends State<Acceuil> {
     );
   }
 }
+
+
+
+
+
 
 class AcceuilBody extends StatelessWidget {
   AcceuilBody(this._listeTask);
