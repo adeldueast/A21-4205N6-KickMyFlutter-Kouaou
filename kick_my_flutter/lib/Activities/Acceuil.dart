@@ -11,6 +11,10 @@ import 'package:intl/intl.dart';
 import 'package:kick_my_flutter/lib_http.dart';
 import 'package:kick_my_flutter/transfer.dart';
 
+//TODO : difference entre Dio et simple http?
+//TODO : 403 DioErrorType http 403?
+//TODO : how am i suppose to initialize variables? null? Ex Date line 34 && 79; Or in constructor of Task
+
 // ACCEUIL PAGE
 class Acceuil extends StatefulWidget {
   const Acceuil({Key? key}) : super(key: key);
@@ -31,7 +35,7 @@ class _AcceuilState extends State<Acceuil> {
     String newTaskDateText,
   ) {
     return MaterialButton(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
       color: Colors.redAccent,
       onPressed: () {
         Task newTask = Task(newTaskName, 0, 0, newTaskDate);
@@ -44,19 +48,19 @@ class _AcceuilState extends State<Acceuil> {
         } else {
           print("creating new task named --->>" + newTaskName);
 
-            AddTaskRequest req = AddTaskRequest();
-            req.name = newTaskName;
-            req.deadline = newTaskDate;
+          AddTaskRequest req = AddTaskRequest();
+          req.name = newTaskName;
+          req.deadline = newTaskDate;
 
-            try {
-              addTask(req);
-            } on DioError catch (e) {
-              print(e.response!.statusMessage);
-              print(e.response!.statusCode);
-            }
-            Map<int,String> map;
-            _listeTask.add(newTask);
-            Navigator.pop(context);
+          try {
+            addTask(req);
+          } on DioError catch (e) {
+            print(e.response!.statusMessage);
+            print(e.response!.statusCode);
+          }
+          Map<int, String> map;
+          _listeTask.add(newTask);
+          Navigator.pop(context);
           setState(() {});
         }
       },
@@ -164,7 +168,6 @@ class _AcceuilState extends State<Acceuil> {
                                     icon: Icon(FontAwesomeIcons.calendarCheck),
                                     color: Colors.white,
                                     onPressed: () async {
-
                                       newTaskDate =
                                           (await _selectDate(context))!;
                                       final DateFormat formatter =
@@ -228,6 +231,13 @@ class _AcceuilState extends State<Acceuil> {
           size: 42,
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+       // clipBehavior:Clip.antiAliasWithSaveLayer,
+        notchMargin: 4.0,
+        child: Container(height: 40,),
+      ),
     );
   }
 }
@@ -241,7 +251,6 @@ class AcceuilBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Container(
       color: Colors.white,
-
       child: new CustomScrollView(
         scrollDirection: Axis.vertical,
         slivers: <Widget>[
