@@ -14,6 +14,7 @@ import 'package:kick_my_flutter/transfer.dart';
 //TODO : difference entre Dio et simple http?
 //TODO : 403 DioErrorType http 403?
 //TODO : how am i suppose to initialize variables? null? Ex Date line 34 && 79; Or in constructor of Task
+//TODO : lib_http why just trycatch again in Signin Signup in Login??
 
 // ACCEUIL PAGE
 class Acceuil extends StatefulWidget {
@@ -50,7 +51,7 @@ class _AcceuilState extends State<Acceuil> {
 
           AddTaskRequest req = AddTaskRequest();
           req.name = newTaskName;
-          req.deadline = newTaskDate;
+         // req.deadline = newTaskDate;
 
           try {
             addTask(req);

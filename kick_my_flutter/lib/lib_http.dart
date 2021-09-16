@@ -21,44 +21,26 @@ Future<String> cookie() async {
 }
 
 Future<SignupResponse> signup(SignupRequest request) async {
-  try {
-    var dio = Dio();
-    var response = await SingletonDio.getDio().post(
-        'https://kickmyb-server.herokuapp.com/api/id/signup',
-        data: request);
-    print(response);
-    print(response.statusCode.toString() + "logged in");
-    return SignupResponse.fromJson(response.data);
-  } catch (e) {
-    throw (e);
-  }
+  var response = await SingletonDio.getDio().post(
+      'https://kickmyb-server.herokuapp.com/api/id/signup',
+      data: request);
+  print(response);
+  print(response.statusCode.toString() + "logged in");
+  return SignupResponse.fromJson(response.data);
 }
 
 Future<SigninResponse> signin(SigninRequest request) async {
-  try {
-    var dio = Dio();
-    var response = await dio.post(
-        'https://kickmyb-server.herokuapp.com/api/id/signin',
-        data: request);
-    print(response);
-    print(response.statusCode.toString() + "signed in");
-    return SigninResponse.fromJson(response.data);
-  } catch (e) {
-    throw (e);
-  }
+  var response = await SingletonDio.getDio().post(
+      'https://kickmyb-server.herokuapp.com/api/id/signin',
+      data: request);
+  print(response);
+  print(response.statusCode.toString() + "signed in");
+  return SigninResponse.fromJson(response.data);
 }
+
 addTask(AddTaskRequest request) async {
-  try {
-    var dio = Dio();
-    var response = await dio.post(
-        'https://kickmyb-server.herokuapp.com/api/add',
-        data: request);
-
-    print(response);
-    print(response.statusCode.toString() + "added a task successfully");
-  } catch (e) {
-    throw(e);
-  }
+  var response = await SingletonDio.getDio()
+      .post('https://kickmyb-server.herokuapp.com/api/add', data: request);
+  print(response);
+  print(response.statusCode.toString() + "added a task successfully");
 }
-
-

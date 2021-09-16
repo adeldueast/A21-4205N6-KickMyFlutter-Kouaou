@@ -77,8 +77,8 @@ class SigninResponse {
 class AddTaskRequest{
 
   AddTaskRequest();
-  String? name;
-  DateTime? deadline;
+  String name="";
+  DateTime deadline = DateTime(2021,10,24);
 
 
   /// A necessary factory constructor for creating a new User instance

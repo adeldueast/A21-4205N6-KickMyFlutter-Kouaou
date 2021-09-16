@@ -24,6 +24,7 @@ class _LoginScreenState extends State<LoginScreen>
       SignupRequest request = SignupRequest();
       request.username = signupUsername;
       request.password = signupPW1;
+
       var response = await signup(request);
 
       // send to acceuil
@@ -31,9 +32,9 @@ class _LoginScreenState extends State<LoginScreen>
         "/screen2",
       );
     } on DioError catch (e) {
+
       print(e.response);
       print(e.message);
-
       String message = e.response!.data;
       if (message == "BadCredentialsException") {
         ScaffoldMessenger.of(context)
@@ -43,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen>
             .showSnackBar(SnackBar(content: Text("An error just occured")));
       }
 
-      print(e);
+
     }
   }
 
@@ -63,9 +64,18 @@ class _LoginScreenState extends State<LoginScreen>
 
       print(e.response);
       print(e.message);
+      String message = e.response!.data;
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Wrong username or password")));
+      if (message =="InternalAuthenticationServiceException"){
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Wrong username or password")));
+      }
+      else{
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("An error just occured")));
+      }
+
+
     }
   }
 
