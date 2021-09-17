@@ -26,7 +26,7 @@ Future<SignupResponse> signup(SignupRequest request) async {
       'https://kickmyb-server.herokuapp.com/api/id/signup',
       data: request);
   print(response);
-  print(response.statusCode.toString() + "logged in");
+  print(response.statusCode.toString() + " logged in");
   return SignupResponse.fromJson(response.data);
 }
 
@@ -35,7 +35,7 @@ Future<SigninResponse> signin(SigninRequest request) async {
       'https://kickmyb-server.herokuapp.com/api/id/signin',
       data: request);
   print(response);
-  print(response.statusCode.toString() + "signed in");
+  print(response.statusCode.toString() + " signed in");
   return SigninResponse.fromJson(response.data);
 }
 
@@ -43,34 +43,27 @@ addTask(AddTaskRequest request) async {
   var response = await SingletonDio.getDio()
       .post('https://kickmyb-server.herokuapp.com/api/add', data: request);
   print(response);
-  print(response.statusCode.toString() + "added a task successfully");
+  print(response.statusCode.toString() + " added a task successfully");
 }
-
 
 logout() async {
   var response = await SingletonDio.getDio()
       .post('https://kickmyb-server.herokuapp.com/api/id/signout');
   print(response);
-  print(response.statusCode.toString() + "logged out successfully");
+  print(response.statusCode.toString() + " logged out successfully");
 }
 
-Future<HomeItemResponse> getListTask(List<HomeItemResponse> _listTask) async{
-
-
+Future<List<HomeItemResponse>> getListTask() async {
   var response = await SingletonDio.getDio()
       .get('https://kickmyb-server.herokuapp.com/api/home');
-
+  print(response.statusCode.toString() + " getTask success");
 
   var listeJSON = response.data as List;
 
+  List<HomeItemResponse> _listTask = [];
   _listTask = listeJSON.map((e) {
-
     return HomeItemResponse.fromJson(e);
   }).toList();
 
-
-  print(response);
-  print(response.statusCode.toString() + "logged out successfully");
-
-  return HomeItemResponse.fromJson(response.data);
+  return _listTask;
 }

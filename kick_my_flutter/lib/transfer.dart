@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'transfer.g.dart';
 
@@ -81,14 +82,10 @@ class AddTaskRequest{
   DateTime deadline = DateTime(2021,10,24);
 
 
-  /// A necessary factory constructor for creating a new User instance
-  /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
-  /// The constructor is named after the source class, in this case, User.
+
   factory AddTaskRequest.fromJson(Map<String, dynamic> json) => _$AddTaskRequestFromJson(json);
 
-  /// `toJson` is the convention for a class to declare support for serialization
-  /// to JSON. The implementation simply calls the private, generated
-  /// helper method `_$UserToJson`.
+
   Map<String, dynamic> toJson() => _$AddTaskRequestToJson(this);
 
 }
@@ -102,16 +99,21 @@ class HomeItemResponse{
    String? name;
    int? percentageDone;
    int? percentageTimeSpent;
-   DateTime? deadline;
 
-  /// A necessary factory constructor for creating a new User instance
-  /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
-  /// The constructor is named after the source class, in this case, User.
+  @JsonKey(fromJson: _fromJson, toJson: _toJson)
+   DateTime deadline = DateTime.now();
+
+
   factory HomeItemResponse.fromJson(Map<String, dynamic> json) => _$HomeItemResponseFromJson(json);
-
-  /// `toJson` is the convention for a class to declare support for serialization
-  /// to JSON. The implementation simply calls the private, generated
-  /// helper method `_$UserToJson`.
   Map<String, dynamic> toJson() => _$HomeItemResponseToJson(this);
 
+  @override
+  String toString() {
+    return 'Task: {name: ${name}, pourcentageTask: ${percentageDone} pourcentage: ${percentageTimeSpent} dateLimite : ${deadline}';
+  }
 }
+
+final _dateFormatter = DateFormat('MMM d, yyyy h:mm:ss a');
+DateTime _fromJson(String date) => _dateFormatter.parse(date);
+String _toJson(DateTime date) => _dateFormatter.format(date);
+

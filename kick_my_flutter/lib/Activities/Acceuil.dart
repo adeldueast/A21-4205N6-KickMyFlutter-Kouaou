@@ -6,13 +6,13 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:kick_my_flutter/Activities/AddTask.dart';
 import 'package:kick_my_flutter/CustomDrawer.dart';
 import 'package:kick_my_flutter/Models/Task.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:kick_my_flutter/lib_http.dart';
 import 'package:kick_my_flutter/transfer.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 // ACCEUIL PAGE
 class Acceuil extends StatefulWidget {
@@ -30,6 +30,7 @@ class _AcceuilState extends State<Acceuil> {
       (index) => new Task("Task " + index.toString(), ((index * 5) + 5) / 100,
           0.4, new DateTime.now()));*/
   List<HomeItemResponse> _listeTask =[];
+  bool _isLoading=false;
 
   Widget _addTaskButton(
     String newTaskName,
@@ -72,23 +73,30 @@ class _AcceuilState extends State<Acceuil> {
     );
   }
 
-  void HTTPgetListTask(){
+  void HTTPgetListTask() async  {
+    setState(() {
+      _isLoading=true;
+    });
     try{
 
-      getListTask(_listeTask);
-
-
+      _listeTask= await getListTask() ;
+      for (var o in _listeTask) {
+        print(o.toString());
+      }
 
     }on DioError catch(e){
-
+      print(e.response!.data);
     }
 
+    setState(() {
+      _isLoading=false;
+    });
   }
 
 
   @override
-  void initState() {
-    HTTPgetListTask();
+  void initState()  {
+       HTTPgetListTask();
   }
 
   Future<DateTime?> _selectDate(BuildContext context) async {
@@ -232,6 +240,7 @@ class _AcceuilState extends State<Acceuil> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
 
       drawer: CustomDrawer(),
@@ -240,10 +249,10 @@ class _AcceuilState extends State<Acceuil> {
         systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: Colors.redAccent ),
         backgroundColor: Colors.redAccent,
         centerTitle: true,
-        title: Text("Add task"),
+        title: Text("Home"),
 
       ),
-      body: Container(
+      body: _isLoading   ? SpinKitThreeBounce(color: Colors.redAccent,size: 40,) : Container(
         color: Colors.white,
         child: new AcceuilBody(_listeTask),
       ),
@@ -269,12 +278,13 @@ class _AcceuilState extends State<Acceuil> {
 }
 
 class AcceuilBody extends StatelessWidget {
-  AcceuilBody(this._listeTask);
 
+  AcceuilBody(this._listeTask);
   final List<HomeItemResponse> _listeTask;
 
   @override
   Widget build(BuildContext context) {
+
     return new Container(
       color: Colors.white,
       child: new CustomScrollView(
