@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:kick_my_flutter/Activities/AddTask.dart';
 import 'package:kick_my_flutter/CustomDrawer.dart';
 import 'package:kick_my_flutter/Models/Task.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
@@ -12,11 +14,11 @@ import 'package:intl/intl.dart';
 import 'package:kick_my_flutter/lib_http.dart';
 import 'package:kick_my_flutter/transfer.dart';
 
-
-
 // ACCEUIL PAGE
 class Acceuil extends StatefulWidget {
-  const Acceuil({Key? key,}) : super(key: key);
+  const Acceuil({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _AcceuilState createState() => _AcceuilState();
@@ -25,7 +27,7 @@ class Acceuil extends StatefulWidget {
 class _AcceuilState extends State<Acceuil> {
   List<Task> _listeTask = new List<Task>.generate(
       20,
-      (index) => new Task ("Task " + index.toString(), ((index * 5) + 5) / 100,
+      (index) => new Task("Task " + index.toString(), ((index * 5) + 5) / 100,
           0.4, new DateTime.now()));
 
   Widget _addTaskButton(
@@ -70,8 +72,6 @@ class _AcceuilState extends State<Acceuil> {
               decoration: TextDecoration.underline)),
     );
   }
-
-
 
   Future<DateTime?> _selectDate(BuildContext context) async {
     FocusScope.of(context).requestFocus(new FocusNode());
@@ -216,8 +216,10 @@ class _AcceuilState extends State<Acceuil> {
   Widget build(BuildContext context) {
     return Scaffold(
 
-      drawer:CustomDrawer(),
+      drawer: CustomDrawer(),
       appBar: AppBar(
+
+        systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: Colors.redAccent ),
         backgroundColor: Colors.redAccent,
         automaticallyImplyLeading: false,
         title: Center(child: Text("Home")),
@@ -228,7 +230,7 @@ class _AcceuilState extends State<Acceuil> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.redAccent,
-        onPressed: _showModalBottomSheet,
+        onPressed: () => Navigator.pushNamed(context, "/screen3"),
         child: Icon(
           Icons.add,
           size: 42,
@@ -237,8 +239,8 @@ class _AcceuilState extends State<Acceuil> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
-        // clipBehavior:Clip.antiAliasWithSaveLayer,
-        notchMargin: 4.0,
+
+        notchMargin: 5.0,
         child: Container(
           height: 40,
         ),
@@ -246,11 +248,6 @@ class _AcceuilState extends State<Acceuil> {
     );
   }
 }
-
-
-
-
-
 
 class AcceuilBody extends StatelessWidget {
   AcceuilBody(this._listeTask);
@@ -272,7 +269,7 @@ class AcceuilBody extends StatelessWidget {
                 (context, index) => GestureDetector(
                     onTap: () {
                       Navigator.of(context).pushNamed(
-                        "/screen3",
+                        "/screen4",
                       );
                     },
                     child: new TaskRow(_listeTask[index])),

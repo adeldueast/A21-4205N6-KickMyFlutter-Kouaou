@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kick_my_flutter/Activities/AddTask.dart';
 import 'Acceuil.dart';
 import 'Consultation.dart';
 import 'Login.dart';
@@ -21,7 +22,9 @@ class MyApp extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         "/screen1": (BuildContext context) => new LoginScreen(),
         "/screen2": (BuildContext context) => new Acceuil(),
-        "/screen3": (BuildContext context) => new Consultation(),
+        "/screen3": (BuildContext context) => new AddTask(),
+        "/screen4": (BuildContext context) => new Consultation(),
+
 
       },
     );

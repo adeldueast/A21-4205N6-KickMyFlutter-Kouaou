@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kick_my_flutter/Models/Session.dart';
+import 'package:kick_my_flutter/Models/SessionSingleton.dart';
+
+import 'Activities/AddTask.dart';
 
 class CustomDrawer extends StatefulWidget {
   @override
@@ -15,24 +17,28 @@ class _CustomDrawerState extends State<CustomDrawer> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
         borderRadius: BorderRadius.horizontal(right: Radius.circular(35)),
         child: Drawer(
           child: ListView(
+
             children: [
               UserAccountsDrawerHeader(
                   decoration: BoxDecoration(color: Colors.redAccent),
-                  accountName: Text(Session.shared.username.toString()),
-                  accountEmail:
-                      Text(Session.shared.username.toString() + "@gmail.com"),
+                  accountName:
+                      Text(SessionSingleton.shared.username.toString()),
+                  accountEmail: Text(
+                      SessionSingleton.shared.username.toString() +
+                          "@gmail.com"),
                   currentAccountPicture: Image.network(
                       "https://cdn-icons-png.flaticon.com/512/3135/3135715.png")),
               ListTile(
                   leading: Icon(Icons.home),
                   title: Text('Home'),
-                  selected: _selectedDestination == 0,
+                  selected: ModalRoute.of(context)!.settings.name == "/screen2",
                   onTap: () => {
                         selectDestination(0),
                         if (ModalRoute.of(context)!.settings.name == "/screen2")
@@ -40,15 +46,30 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             Navigator.of(context).pop(),
                           }
                         else
-                          {}
+                          {
+                            Navigator.of(context).pop(),
+
+                            Navigator.of(context).pop(),
+                          }
                       }),
               ListTile(
                 leading: Icon(Icons.add),
                 title: Text('Add task'),
-                selected: _selectedDestination == 1,
-                onTap: () => {selectDestination(1),
-                  Navigator.pop(context),
+                selected: ModalRoute.of(context)!.settings.name == "/screen3",
+                onTap: () => {
+                  selectDestination(1),
+                  if (ModalRoute.of(context)!.settings.name == "/screen3")
+                    {
+                      Navigator.of(context).pop(),
 
+                    }
+                  else
+                    {
+                      Navigator.of(context).pop(),
+                      print(ModalRoute.of(context)!.settings.name),
+                      Navigator.pushNamed(context, "/screen3")
+                     
+                    }
                 },
               ),
               ListTile(
@@ -57,6 +78,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 selected: _selectedDestination == 2,
                 onTap: () => {
                   selectDestination(2),
+                Navigator.of(context).pushNamedAndRemoveUntil('/screen1', (Route<dynamic> route) => false),
 
                 },
               ),
