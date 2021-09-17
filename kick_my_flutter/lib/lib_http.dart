@@ -44,3 +44,11 @@ addTask(AddTaskRequest request) async {
   print(response);
   print(response.statusCode.toString() + "added a task successfully");
 }
+
+
+logout() async {
+  var response = await SingletonDio.getDio()
+      .post('https://kickmyb-server.herokuapp.com/api/id/signout');
+  print(response);
+  print(response.statusCode.toString() + "logged out successfully");
+}

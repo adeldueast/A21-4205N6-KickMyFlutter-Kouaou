@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kick_my_flutter/Models/SessionSingleton.dart';
+import 'package:kick_my_flutter/lib_http.dart';
 
 import 'Activities/AddTask.dart';
 
@@ -79,6 +80,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 onTap: () => {
                   selectDestination(2),
                 Navigator.of(context).pushNamedAndRemoveUntil('/screen1', (Route<dynamic> route) => false),
+                  logout(),
 
                 },
               ),
