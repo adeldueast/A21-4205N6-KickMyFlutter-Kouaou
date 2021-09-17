@@ -18,14 +18,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
         borderRadius: BorderRadius.horizontal(right: Radius.circular(35)),
         child: Drawer(
           child: ListView(
-
             children: [
               UserAccountsDrawerHeader(
                   decoration: BoxDecoration(color: Colors.redAccent),
@@ -49,8 +47,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         else
                           {
                             Navigator.of(context).pop(),
-
-                            Navigator.of(context).pop(),
+                            Navigator.of(context)
+                                .pushReplacementNamed("/screen2"),
                           }
                       }),
               ListTile(
@@ -62,14 +60,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   if (ModalRoute.of(context)!.settings.name == "/screen3")
                     {
                       Navigator.of(context).pop(),
-
                     }
                   else
                     {
+                      //pop the drawer
                       Navigator.of(context).pop(),
-                      print(ModalRoute.of(context)!.settings.name),
-                      Navigator.pushNamed(context, "/screen3")
-                     
+
+                      if (ModalRoute.of(context)!.settings.name == "/screen4")
+                        {Navigator.pushReplacementNamed(context, "/screen3")}
+                      else
+                        {Navigator.pushNamed(context, "/screen3")}
                     }
                 },
               ),
@@ -79,9 +79,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 selected: _selectedDestination == 2,
                 onTap: () => {
                   selectDestination(2),
-                Navigator.of(context).pushNamedAndRemoveUntil('/screen1', (Route<dynamic> route) => false),
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/screen1', (Route<dynamic> route) => false),
                   logout(),
-
                 },
               ),
             ],
