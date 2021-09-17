@@ -25,10 +25,11 @@ class Acceuil extends StatefulWidget {
 }
 
 class _AcceuilState extends State<Acceuil> {
-  List<Task> _listeTask = new List<Task>.generate(
+ /* List<Task> _listeTask = new List<Task>.generate(
       20,
       (index) => new Task("Task " + index.toString(), ((index * 5) + 5) / 100,
-          0.4, new DateTime.now()));
+          0.4, new DateTime.now()));*/
+  List<HomeItemResponse> _listeTask =[];
 
   Widget _addTaskButton(
     String newTaskName,
@@ -59,8 +60,6 @@ class _AcceuilState extends State<Acceuil> {
             print(e.response!.statusMessage);
             print(e.response!.statusCode);
           }
-          Map<int, String> map;
-          _listeTask.add(newTask);
           Navigator.pop(context);
           setState(() {});
         }
@@ -71,6 +70,25 @@ class _AcceuilState extends State<Acceuil> {
               color: Colors.white,
               decoration: TextDecoration.underline)),
     );
+  }
+
+  void HTTPgetListTask(){
+    try{
+
+      getListTask(_listeTask);
+
+
+
+    }on DioError catch(e){
+
+    }
+
+  }
+
+
+  @override
+  void initState() {
+    HTTPgetListTask();
   }
 
   Future<DateTime?> _selectDate(BuildContext context) async {
@@ -221,8 +239,9 @@ class _AcceuilState extends State<Acceuil> {
 
         systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: Colors.redAccent ),
         backgroundColor: Colors.redAccent,
-        automaticallyImplyLeading: false,
-        title: Center(child: Text("Home")),
+        centerTitle: true,
+        title: Text("Add task"),
+
       ),
       body: Container(
         color: Colors.white,
@@ -252,7 +271,7 @@ class _AcceuilState extends State<Acceuil> {
 class AcceuilBody extends StatelessWidget {
   AcceuilBody(this._listeTask);
 
-  final List<Task> _listeTask;
+  final List<HomeItemResponse> _listeTask;
 
   @override
   Widget build(BuildContext context) {
@@ -284,7 +303,7 @@ class AcceuilBody extends StatelessWidget {
 }
 
 class TaskRow extends StatelessWidget {
-  final Task task;
+  final HomeItemResponse task;
 
   TaskRow(this.task);
 
@@ -310,14 +329,14 @@ class TaskRow extends StatelessWidget {
         children: <Widget>[
           new Container(height: 1.0),
           new Text(
-            task.nom,
+            task.name.toString(),
             style: headerTextStyle,
           ),
           new Container(
             margin: new EdgeInsets.symmetric(vertical: 2.0),
           ),
           //new Container(height: 9.0),
-          new Text(task.dateLimite.toString(), style: subHeaderTextStyle),
+          new Text(task.deadline.toString(), style: subHeaderTextStyle),
           new Container(
             margin: new EdgeInsets.symmetric(vertical: 2.0),
           ),
@@ -327,7 +346,7 @@ class TaskRow extends StatelessWidget {
               Expanded(
                 child: Container(
                   child: LinearProgressIndicator(
-                    value: task.pourcentageDate,
+                    value: task.percentageTimeSpent!.toDouble(),
                     valueColor: AlwaysStoppedAnimation(Colors.redAccent),
                     backgroundColor: Colors.white,
                   ),
@@ -341,7 +360,7 @@ class TaskRow extends StatelessWidget {
                   child: CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation(Colors.redAccent),
                     backgroundColor: Colors.white,
-                    value: task.pourcentageTask,
+                    value: task.percentageDone!.toDouble(),
                   ),
                 ),
               ),

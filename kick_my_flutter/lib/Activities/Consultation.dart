@@ -12,7 +12,7 @@ class Consultation extends StatelessWidget {
       drawer: CustomDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.redAccent,
-        automaticallyImplyLeading: false,
+
         title: Center(child: Text("Consultation")),
       ),
       body: Container(

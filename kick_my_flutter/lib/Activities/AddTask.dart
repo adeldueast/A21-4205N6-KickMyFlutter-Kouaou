@@ -9,22 +9,17 @@ class AddTask extends StatefulWidget {
   State<AddTask> createState() => _AddTaskState();
 }
 
-class _AddTaskState extends State<AddTask> with SingleTickerProviderStateMixin{
-
-  late AnimationController _animationController;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
-  }
-
+class _AddTaskState extends State<AddTask>  {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: CustomDrawer(),
-      appBar: AppBar(centerTitle: true,title: Text("Add task"),backgroundColor: Colors.redAccent, iconTheme: IconThemeData(color: Colors.white),),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("Add task"),
+        backgroundColor: Colors.redAccent,
+
+      ),
     );
   }
 }
