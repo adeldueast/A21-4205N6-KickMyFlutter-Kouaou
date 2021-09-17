@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +74,7 @@ class _AcceuilState extends State<Acceuil> {
     );
   }
 
-  void HTTPgetListTask() async  {
+  Future<void> HTTPgetListTask() async  {
     setState(() {
       _isLoading=true;
     });
@@ -254,7 +255,7 @@ class _AcceuilState extends State<Acceuil> {
       ),
       body: _isLoading   ? SpinKitThreeBounce(color: Colors.redAccent,size: 40,) : Container(
         color: Colors.white,
-        child: new AcceuilBody(_listeTask),
+        child: new AcceuilBody(_listeTask,HTTPgetListTask),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.redAccent,
@@ -279,37 +280,66 @@ class _AcceuilState extends State<Acceuil> {
 
 class AcceuilBody extends StatelessWidget {
 
-  AcceuilBody(this._listeTask);
+  AcceuilBody(this._listeTask, this.onRefresh,);
   final List<HomeItemResponse> _listeTask;
+  final Function onRefresh;
 
   @override
   Widget build(BuildContext context) {
 
     return new Container(
       color: Colors.white,
-      child: new CustomScrollView(
-        scrollDirection: Axis.vertical,
-        slivers: <Widget>[
-          new SliverPadding(
-            padding: const EdgeInsets.symmetric(vertical: 18.0),
-            sliver: new SliverFixedExtentList(
-              itemExtent: 152.0,
-              delegate: new SliverChildBuilderDelegate(
-                (context, index) => GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pushNamed(
-                        "/screen4",
-                      );
-                    },
-                    child: new TaskRow(_listeTask[index])),
-                childCount: _listeTask.length,
+
+        child: CustomRefreshIndicator(
+          builder: (context, child, controller) {
+            /// TODO: Implement your own refresh indicator
+            return Stack(
+              children: <Widget>[
+                AnimatedBuilder(
+                  animation: controller,
+                  builder: (BuildContext context, _) {
+                    /// This part will be rebuild on every controller change
+                    return Container(width: 0, height: 0,);
+                  },
+                ),
+                /// Scrollable widget that was provided as [child] argument
+                ///
+                /// TIP:
+                /// You can also wrap [child] with [Transform] widget to also a animate list transform (see example app)
+                child,
+              ],
+            );
+          },
+          onRefresh: ()=>onRefresh(),
+          child: new CustomScrollView(
+            scrollDirection: Axis.vertical,
+            slivers: <Widget>[
+              new SliverPadding(
+                padding: const EdgeInsets.symmetric(vertical: 18.0),
+                sliver: new SliverFixedExtentList(
+
+                  itemExtent: 152.0,
+                  delegate: new SliverChildBuilderDelegate(
+
+                    (context, index) => GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(
+                            "/screen4",
+                          );
+                        },
+                        child: new TaskRow(_listeTask[index])),
+                    childCount: _listeTask.length,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+
+        ),
+
     );
   }
+
 }
 
 class TaskRow extends StatelessWidget {
