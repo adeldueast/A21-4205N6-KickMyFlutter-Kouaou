@@ -62,8 +62,9 @@ class _AcceuilState extends State<Acceuil> {
             print(e.response!.statusMessage);
             print(e.response!.statusCode);
           }
+          HTTPgetListTask();
           Navigator.pop(context);
-          setState(() {});
+          //setState(() {});
         }
       },
       child: Text("Add task",
@@ -259,7 +260,8 @@ class _AcceuilState extends State<Acceuil> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.redAccent,
-        onPressed: () => Navigator.pushNamed(context, "/screen3"),
+        onPressed: () =>// Navigator.pushNamed(context, "/screen3"),
+        _showModalBottomSheet(),
         child: Icon(
           Icons.add,
           size: 42,
