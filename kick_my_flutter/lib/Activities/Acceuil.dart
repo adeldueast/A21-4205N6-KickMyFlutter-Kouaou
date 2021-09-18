@@ -26,14 +26,12 @@ class Acceuil extends StatefulWidget {
 }
 
 class _AcceuilState extends State<Acceuil> {
- /* List<Task> _listeTask = new List<Task>.generate(
-      20,
-      (index) => new Task("Task " + index.toString(), ((index * 5) + 5) / 100,
-          0.4, new DateTime.now()));*/
-  List<HomeItemResponse> _listeTask =[];
-  bool _isLoading=false;
 
-  Widget _addTaskButton(
+  List<HomeItemResponse> _listeTask = [];
+  bool _isLoading = false;
+
+  //TODO : Ancien button pour addtask dans le showmodalSheet
+  /*Widget _addTaskButton(
     String newTaskName,
     DateTime newTaskDate,
     String newTaskDateText,
@@ -41,23 +39,18 @@ class _AcceuilState extends State<Acceuil> {
     return MaterialButton(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
       color: Colors.redAccent,
-      onPressed: () {
-        Task newTask = Task(newTaskName, 0, 0, newTaskDate);
-        print(newTask.toString());
+      onPressed: () async {
         if (newTaskDate == null ||
             newTaskName.isEmpty ||
             newTaskDateText.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Make sure you pickedd a name anda  date")));
+              content: Text("Make sure you picked a name and a  date")));
         } else {
-          print("creating new task named --->>" + newTaskName);
-
-          AddTaskRequest req = AddTaskRequest();
-          req.name = newTaskName;
-          // req.deadline = newTaskDate;
-
           try {
-            addTask(req);
+            AddTaskRequest req = AddTaskRequest();
+            req.name = newTaskName;
+            req.deadline = newTaskDate;
+            await addTask(req);
           } on DioError catch (e) {
             print(e.response!.statusMessage);
             print(e.response!.statusCode);
@@ -73,35 +66,9 @@ class _AcceuilState extends State<Acceuil> {
               color: Colors.white,
               decoration: TextDecoration.underline)),
     );
-  }
-
-  Future<void> HTTPgetListTask() async  {
-    setState(() {
-      _isLoading=true;
-    });
-    try{
-
-      _listeTask= await getListTask() ;
-      for (var o in _listeTask) {
-        print(o.toString());
-      }
-
-    }on DioError catch(e){
-      print(e.response!.data);
-    }
-
-    setState(() {
-      _isLoading=false;
-    });
-  }
-
-
-  @override
-  void initState()  {
-       HTTPgetListTask();
-  }
-
-  Future<DateTime?> _selectDate(BuildContext context) async {
+  }*/
+  //TODO : Ancien _showDatePicker pour addtask dans le showmodalSheet
+  /*Future<DateTime?> _selectDate(BuildContext context) async {
     FocusScope.of(context).requestFocus(new FocusNode());
     await Future.delayed(Duration(milliseconds: 90));
 
@@ -123,9 +90,9 @@ class _AcceuilState extends State<Acceuil> {
       return newDateTime;
     }
     return newDateTime;
-  }
-
-  void _showModalBottomSheet() {
+  }*/
+  //TODO : Ancien _showModalBottomSheet pour addtask dans le showmodalSheet
+  /*void _showModalBottomSheet() {
     DateTime? newTaskDate = DateTime.now();
     late String newTaskName = "";
     late String newTaskDateText = "";
@@ -238,30 +205,59 @@ class _AcceuilState extends State<Acceuil> {
             );
           });
         });
+  }*/
+
+  Future<void> HTTPgetListTask() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      _listeTask = await getListTask();
+    /*  for (var o in _listeTask) {
+        print(o.toString());
+      }*/
+    } on DioError catch (e) {
+      print(e.response!.data);
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
+  void initState() {
+    HTTPgetListTask();
+  }
+
+
+
+
+  @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
       drawer: CustomDrawer(),
       appBar: AppBar(
-
-        systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: Colors.redAccent ),
+        systemOverlayStyle:
+            SystemUiOverlayStyle(statusBarColor: Colors.redAccent),
         backgroundColor: Colors.redAccent,
         centerTitle: true,
         title: Text("Home"),
-
       ),
-      body: _isLoading   ? SpinKitThreeBounce(color: Colors.redAccent,size: 40,) : Container(
-        color: Colors.white,
-        child: new AcceuilBody(_listeTask,HTTPgetListTask),
-      ),
+      body: _isLoading
+          ? SpinKitThreeBounce(
+              color: Colors.redAccent,
+              size: 40,
+            )
+          : Container(
+              color: Colors.white,
+              child: new AcceuilBody(_listeTask, HTTPgetListTask),
+            ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.redAccent,
-        onPressed: () =>// Navigator.pushNamed(context, "/screen3"),
-        _showModalBottomSheet(),
+        onPressed: () => // Navigator.pushNamed(context, "/screen3"),
+          //  _showModalBottomSheet(),
+        Navigator.pushNamed(context, "/screen3"),
         child: Icon(
           Icons.add,
           size: 42,
@@ -270,10 +266,9 @@ class _AcceuilState extends State<Acceuil> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
-
         notchMargin: 5.0,
         child: Container(
-          height: 40,
+          height: 36,
         ),
       ),
     );
@@ -281,67 +276,67 @@ class _AcceuilState extends State<Acceuil> {
 }
 
 class AcceuilBody extends StatelessWidget {
+  AcceuilBody(
+    this._listeTask,
+    this.onRefresh,
+  );
 
-  AcceuilBody(this._listeTask, this.onRefresh,);
   final List<HomeItemResponse> _listeTask;
   final Function onRefresh;
 
   @override
   Widget build(BuildContext context) {
-
     return new Container(
       color: Colors.white,
+      child: CustomRefreshIndicator(
+        builder: (context, child, controller) {
+          /// TODO: Implement your own refresh indicator
+          return Stack(
+            children: <Widget>[
+              AnimatedBuilder(
+                animation: controller,
+                builder: (BuildContext context, _) {
+                  /// This part will be rebuild on every controller change
+                  return Container(
+                    width: 0,
+                    height: 0,
+                  );
+                },
+              ),
 
-        child: CustomRefreshIndicator(
-          builder: (context, child, controller) {
-            /// TODO: Implement your own refresh indicator
-            return Stack(
-              children: <Widget>[
-                AnimatedBuilder(
-                  animation: controller,
-                  builder: (BuildContext context, _) {
-                    /// This part will be rebuild on every controller change
-                    return Container(width: 0, height: 0,);
-                  },
-                ),
-                /// Scrollable widget that was provided as [child] argument
-                ///
-                /// TIP:
-                /// You can also wrap [child] with [Transform] widget to also a animate list transform (see example app)
-                child,
-              ],
-            );
-          },
-          onRefresh: ()=>onRefresh(),
-          child: new CustomScrollView(
-            scrollDirection: Axis.vertical,
-            slivers: <Widget>[
-              new SliverPadding(
-                padding: const EdgeInsets.symmetric(vertical: 18.0),
-                sliver: new SliverFixedExtentList(
-
-                  itemExtent: 152.0,
-                  delegate: new SliverChildBuilderDelegate(
-
-                    (context, index) => GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pushNamed(
-                            "/screen4",
-                          );
-                        },
-                        child: new TaskRow(_listeTask[index])),
-                    childCount: _listeTask.length,
-                  ),
+              /// Scrollable widget that was provided as [child] argument
+              ///
+              /// TIP:
+              /// You can also wrap [child] with [Transform] widget to also a animate list transform (see example app)
+              child,
+            ],
+          );
+        },
+        onRefresh: () => onRefresh(),
+        child: new CustomScrollView(
+          scrollDirection: Axis.vertical,
+          slivers: <Widget>[
+            new SliverPadding(
+              padding: const EdgeInsets.symmetric(vertical: 18.0),
+              sliver: new SliverFixedExtentList(
+                itemExtent: 152.0,
+                delegate: new SliverChildBuilderDelegate(
+                  (context, index) => GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pushNamed(
+                          "/screen4",
+                        );
+                      },
+                      child: new TaskRow(_listeTask[index])),
+                  childCount: _listeTask.length,
                 ),
               ),
-            ],
-          ),
-
+            ),
+          ],
         ),
-
+      ),
     );
   }
-
 }
 
 class TaskRow extends StatelessWidget {

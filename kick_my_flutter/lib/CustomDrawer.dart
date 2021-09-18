@@ -37,6 +37,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
               ListTile(
                   leading: Icon(Icons.home),
                   title: Text('Home'),
+
                   selected: ModalRoute.of(context)!.settings.name == "/screen2",
                   onTap: () => {
                         selectDestination(0),
@@ -47,8 +48,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         else
                           {
                             Navigator.of(context).pop(),
-                            Navigator.of(context)
-                                .pushReplacementNamed("/screen2"),
+                            Navigator.of(context).pop(),
+                            
                           }
                       }),
               ListTile(

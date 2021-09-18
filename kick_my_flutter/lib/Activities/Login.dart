@@ -29,8 +29,8 @@ class _LoginScreenState extends State<LoginScreen>
       var response = await signup(request);
 
       SessionSingleton.shared.username=response.username;
-      // send to acceuil
 
+      // send to acceuil
       Navigator.of(context).pushReplacementNamed("/screen2");
 
 
