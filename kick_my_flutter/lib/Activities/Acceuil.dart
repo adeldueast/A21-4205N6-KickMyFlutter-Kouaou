@@ -352,7 +352,7 @@ class TaskRow extends StatelessWidget {
         color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.w600);
 
     final regularTextStyle = baseTextStyle.copyWith(
-        color: const Color(0xffb6b2df),
+       // color: const Color(0xffb6b2df),
         fontSize: 9.0,
         fontWeight: FontWeight.w400);
     final subHeaderTextStyle =
@@ -423,12 +423,12 @@ class TaskRow extends StatelessWidget {
           height: 96,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.redAccent,
+            color: Colors.white ,
           ),
           child: Icon(
             FontAwesomeIcons.list,
             size: 40,
-            color: Colors.white,
+            color: Colors.redAccent,
           ),
         ));
 
@@ -437,7 +437,7 @@ class TaskRow extends StatelessWidget {
       margin: new EdgeInsets.only(left: 46.0),
       decoration: new BoxDecoration(
         // color: new Color(0xFF333366),
-        color: Colors.redAccent[100],
+        color: Colors.redAccent,
         shape: BoxShape.rectangle,
         borderRadius: new BorderRadius.circular(8.0),
         boxShadow: <BoxShadow>[
