@@ -79,7 +79,9 @@ class AddTaskRequest{
 
   AddTaskRequest();
   String name="";
-  DateTime deadline = DateTime(2021,10,24);
+
+  @JsonKey(fromJson: _fromJson, toJson: _toJson)
+  DateTime deadLine = DateTime.now();
 
 
 

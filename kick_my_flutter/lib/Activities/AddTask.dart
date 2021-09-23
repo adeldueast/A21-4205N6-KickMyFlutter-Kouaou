@@ -163,9 +163,9 @@ class _AddTaskState extends State<AddTask> {
                         try {
                           AddTaskRequest req = AddTaskRequest();
                           req.name = newTaskName;
-                          req.deadline = newTaskDate!;
+                          req.deadLine = newTaskDate!;
                           print(req.name);
-                          print(req.deadline);
+                          print(req.deadLine);
                           await addTask(req);
                         } on DioError catch (e) {
                           print(e.response!.statusMessage);
