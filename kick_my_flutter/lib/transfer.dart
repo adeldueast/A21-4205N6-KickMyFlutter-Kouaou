@@ -95,13 +95,13 @@ class AddTaskRequest {
 class HomeItemResponse {
   HomeItemResponse(this.id,this.name,this.percentageDone,this.percentageTimeSpent,this.deadline);
 
-  int? id;
-  String? name;
-  int? percentageDone;
-  int? percentageTimeSpent;
+  int id;
+  String name;
+  int percentageDone;
+  int percentageTimeSpent;
 
   @JsonKey(fromJson: _fromJson, toJson: _toJson)
-  DateTime deadline = DateTime.now();
+  DateTime deadline ;
 
   factory HomeItemResponse.fromJson(Map<String, dynamic> json) =>
       _$HomeItemResponseFromJson(json);
@@ -118,12 +118,12 @@ class HomeItemResponse {
 class TaskDetailResponse {
   TaskDetailResponse(this.id,this.name,this.deadLine,this.percentageDone,this.percentageTimeSpent);
 
-  int? id;
-  String? name;
+  int id;
+  String name;
   @JsonKey(fromJson: _fromJson, toJson: _toJson)
-  DateTime deadLine= DateTime.now();
-  int? percentageDone;
-  int? percentageTimeSpent;
+  DateTime deadLine;
+  int percentageDone;
+  int percentageTimeSpent;
 
   factory TaskDetailResponse.fromJson(Map<String, dynamic> json) =>
       _$TaskDetailResponseFromJson(json);

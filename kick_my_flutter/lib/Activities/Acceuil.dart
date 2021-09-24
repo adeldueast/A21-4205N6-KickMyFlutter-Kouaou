@@ -324,10 +324,12 @@ class AcceuilBody extends StatelessWidget {
                         //Navigator.pushNamed(context, "/screen4", arguments: _listeTask[index].id!);
                         if (_listeTask[index].id != null)
                           Navigator.push(
+
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  Consultation(id: _listeTask[index].id!),
+                                  Consultation(id: _listeTask[index].id),
+
                             ),
                           );
                       },
@@ -394,13 +396,13 @@ class TaskRow extends StatelessWidget {
                         child: ClipRRect(
                           borderRadius: BorderRadius.all(Radius.circular(5)),
                           child: LinearProgressIndicator(
-                            value: task.percentageTimeSpent!.toDouble()/100,
+                            value: task.percentageTimeSpent.toDouble()/100,
                             backgroundColor: Colors.white,
                             valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
                           ),
                         ),
                       ),
-                      Align(child: Text((task.percentageTimeSpent!.toDouble()/100).round().toString()), alignment: Alignment.topCenter,),
+                      Align(child: Text((task.percentageTimeSpent.toDouble()/100).round().toString()+" %"), alignment: Alignment.topCenter,),
                     ],
                   )
                 ),
@@ -412,7 +414,7 @@ class TaskRow extends StatelessWidget {
                   child: CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation(Colors.redAccent),
                     backgroundColor: Colors.white,
-                    value: task.percentageDone!.toDouble() / 100,
+                    value: task.percentageDone.toDouble() / 100,
                   ),
                 ),
               ),

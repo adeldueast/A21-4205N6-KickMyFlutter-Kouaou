@@ -15,7 +15,7 @@ import 'package:simple_tooltip/simple_tooltip.dart';
 class Consultation extends StatefulWidget {
   final int id;
 
-  Consultation({Key? key,  required this.id}) : super(key: key);
+   Consultation({Key? key,  required this.id}) : super(key: key);
 
   @override
   State<Consultation> createState() => _ConsultationState();
@@ -29,6 +29,7 @@ class _ConsultationState extends State<Consultation> {
     bool _isLoading = false;
    bool _showToolTip = true;
    TaskDetailResponse? _taskDetailResponse ;
+   late int _newProgressionTaskValue;
 
   void _getTaskDetail(int id) async {
     setState(() {
@@ -36,6 +37,7 @@ class _ConsultationState extends State<Consultation> {
     });
     try {
       this._taskDetailResponse = await getTaskDetail(id);
+      _newProgressionTaskValue = _taskDetailResponse!.percentageDone;
       print(_taskDetailResponse.toString());
     } on DioError catch (e) {
       print(e.response);
@@ -47,6 +49,19 @@ class _ConsultationState extends State<Consultation> {
     });
   }
 
+  void _updateTaskProgression(int id, int valeur) async {
+
+  try {
+    var response = await   updateTaskPourcentage(id, valeur);
+
+    //go back to acceuil
+    Navigator.of(context).pushReplacementNamed("/screen2");
+
+  } on DioError catch (e) {
+    print(e.response);
+    print(e.message);
+  }
+  }
 
   @override
   void initState() {
@@ -106,7 +121,7 @@ class _ConsultationState extends State<Consultation> {
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           child: LinearProgressIndicator(
                             minHeight: 10,
-                            value: this._taskDetailResponse!.percentageTimeSpent!.toDouble()/100, //task.percentageTimeSpent!.toDouble(),
+                            value: this._taskDetailResponse!.percentageTimeSpent.toDouble()/100, //task.percentageTimeSpent!.toDouble(),
                             valueColor: AlwaysStoppedAnimation(Colors.redAccent),
                             backgroundColor: Colors.grey[300],
                           ),
@@ -130,7 +145,7 @@ class _ConsultationState extends State<Consultation> {
                               EdgeInsets.symmetric(vertical: 5, horizontal: 20)),
                           backgroundColor: MaterialStateColor.resolveWith(
                                   (states) => Colors.redAccent)),
-                      onPressed: () {},
+                      onPressed: () => _updateTaskProgression(widget.id, _newProgressionTaskValue),
                       child: Text(
                         "SAVE",
                         style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
@@ -194,7 +209,7 @@ class _ConsultationState extends State<Consultation> {
   }
 
   Widget slider() { return SleekCircularSlider(
-      initialValue: _taskDetailResponse!.percentageDone!.toDouble(),
+      initialValue: _taskDetailResponse!.percentageDone.toDouble(),
       appearance: CircularSliderAppearance(
 
           size: 130,
@@ -209,5 +224,13 @@ class _ConsultationState extends State<Consultation> {
               mainLabelStyle: TextStyle(color: Colors.black, fontSize: 28))),
       min: 0,
       max: 100,
-      onChange: (double value) {});}
+      onChange: (double value) {
+
+        _newProgressionTaskValue=value.toInt();
+
+      }
+
+
+
+  );}
 }

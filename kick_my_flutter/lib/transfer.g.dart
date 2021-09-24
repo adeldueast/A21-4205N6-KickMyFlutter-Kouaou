@@ -62,10 +62,10 @@ Map<String, dynamic> _$AddTaskRequestToJson(AddTaskRequest instance) =>
 
 HomeItemResponse _$HomeItemResponseFromJson(Map<String, dynamic> json) {
   return HomeItemResponse(
-    json['id'] as int?,
-    json['name'] as String?,
-    json['percentageDone'] as int?,
-    json['percentageTimeSpent'] as int?,
+    json['id'] as int,
+    json['name'] as String,
+    json['percentageDone'] as int,
+    json['percentageTimeSpent'] as int,
     _fromJson(json['deadline'] as String),
   );
 }
@@ -81,11 +81,11 @@ Map<String, dynamic> _$HomeItemResponseToJson(HomeItemResponse instance) =>
 
 TaskDetailResponse _$TaskDetailResponseFromJson(Map<String, dynamic> json) {
   return TaskDetailResponse(
-    json['id'] as int?,
-    json['name'] as String?,
+    json['id'] as int,
+    json['name'] as String,
     _fromJson(json['deadLine'] as String),
-    json['percentageDone'] as int?,
-    json['percentageTimeSpent'] as int?,
+    json['percentageDone'] as int,
+    json['percentageTimeSpent'] as int,
   );
 }
 

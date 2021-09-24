@@ -26,7 +26,8 @@ Future<SignupResponse> signup(SignupRequest request) async {
       'https://kickmyb-server.herokuapp.com/api/id/signup',
       data: request);
   print(response);
-  print(response.statusCode.toString() + " logged in");
+  if(response.statusCode==200)  print(response.statusCode.toString() + " logged in success");
+
   return SignupResponse.fromJson(response.data);
 }
 
@@ -35,7 +36,8 @@ Future<SigninResponse> signin(SigninRequest request) async {
       'https://kickmyb-server.herokuapp.com/api/id/signin',
       data: request);
   print(response);
-  print(response.statusCode.toString() + " signed in");
+  if(response.statusCode==200)  print(response.statusCode.toString() + " signin success");
+
   return SigninResponse.fromJson(response.data);
 }
 
@@ -56,7 +58,8 @@ logout() async {
 Future<List<HomeItemResponse>> getListTask() async {
   var response = await SingletonDio.getDio()
       .get('https://kickmyb-server.herokuapp.com/api/home');
-  print(response.statusCode.toString() + " getTask success");
+  if(response.statusCode==200)  print(response.statusCode.toString() + " getListTask success");
+
 
   var listeJSON = response.data as List;
 
@@ -71,6 +74,16 @@ Future<List<HomeItemResponse>> getListTask() async {
 Future<TaskDetailResponse> getTaskDetail(int id) async {
   var response = await SingletonDio.getDio()
       .get('https://kickmyb-server.herokuapp.com/api/detail/' + id.toString());
-  print(response.statusCode.toString() + " getTask success");
+  if(response.statusCode==200)  print(response.statusCode.toString() + " getTaskDetail success");
+
   return TaskDetailResponse.fromJson(response.data);
+}
+
+Future<String> updateTaskPourcentage(int id , int valeur) async {
+
+  var response = await SingletonDio.getDio()
+      .get("https://kickmyb-server.herokuapp.com/api/progress/$id/$valeur");
+
+  if(response.statusCode==200)  print(response.statusCode.toString() + " updated task value success");
+  return response.data;
 }
