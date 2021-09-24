@@ -28,7 +28,6 @@ class Acceuil extends StatefulWidget {
 }
 
 class _AcceuilState extends State<Acceuil> {
-
   List<HomeItemResponse> _listeTask = [];
   bool _isLoading = false;
 
@@ -215,7 +214,7 @@ class _AcceuilState extends State<Acceuil> {
     });
     try {
       _listeTask = await getListTask();
-    /*  for (var o in _listeTask) {
+      /*  for (var o in _listeTask) {
         print(o.toString());
       }*/
     } on DioError catch (e) {
@@ -231,9 +230,6 @@ class _AcceuilState extends State<Acceuil> {
   void initState() {
     HTTPgetListTask();
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -258,8 +254,8 @@ class _AcceuilState extends State<Acceuil> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.redAccent,
         onPressed: () => // Navigator.pushNamed(context, "/screen3"),
-          //  _showModalBottomSheet(),
-        Navigator.pushNamed(context, "/screen3"),
+            //  _showModalBottomSheet(),
+            Navigator.pushNamed(context, "/screen3"),
         child: Icon(
           Icons.add,
           size: 42,
@@ -326,15 +322,14 @@ class AcceuilBody extends StatelessWidget {
                   (context, index) => GestureDetector(
                       onTap: () {
                         //Navigator.pushNamed(context, "/screen4", arguments: _listeTask[index].id!);
-                        if(  _listeTask[index].id != null)
+                        if (_listeTask[index].id != null)
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Consultation(id: _listeTask[index].id!),
+                              builder: (context) =>
+                                  Consultation(id: _listeTask[index].id!),
                             ),
                           );
-
-
                       },
                       child: new TaskRow(_listeTask[index])),
                   childCount: _listeTask.length,
@@ -361,7 +356,7 @@ class TaskRow extends StatelessWidget {
         color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.w600);
 
     final regularTextStyle = baseTextStyle.copyWith(
-       // color: const Color(0xffb6b2df),
+        // color: const Color(0xffb6b2df),
         fontSize: 9.0,
         fontWeight: FontWeight.w400);
     final subHeaderTextStyle =
@@ -391,12 +386,23 @@ class TaskRow extends StatelessWidget {
             children: <Widget>[
               Expanded(
                 child: Container(
-                  child: LinearProgressIndicator(
-                    value: task.percentageTimeSpent!.toDouble(),
-                    valueColor: AlwaysStoppedAnimation(Colors.redAccent),
-                    backgroundColor: Colors.white,
-                  ),
-                  color: Colors.purple,
+
+                  child: Stack(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 20,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          child: LinearProgressIndicator(
+                            value: task.percentageTimeSpent!.toDouble()/100,
+                            backgroundColor: Colors.white,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                          ),
+                        ),
+                      ),
+                      Align(child: Text((task.percentageTimeSpent!.toDouble()/100).round().toString()), alignment: Alignment.topCenter,),
+                    ],
+                  )
                 ),
                 flex: 1,
               ),
@@ -406,7 +412,7 @@ class TaskRow extends StatelessWidget {
                   child: CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation(Colors.redAccent),
                     backgroundColor: Colors.white,
-                    value: task.percentageDone!.toDouble(),
+                    value: task.percentageDone!.toDouble() / 100,
                   ),
                 ),
               ),
@@ -432,7 +438,7 @@ class TaskRow extends StatelessWidget {
           height: 96,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.white ,
+            color: Colors.white,
           ),
           child: Icon(
             FontAwesomeIcons.list,
@@ -446,7 +452,7 @@ class TaskRow extends StatelessWidget {
       margin: new EdgeInsets.only(left: 46.0),
       decoration: new BoxDecoration(
         // color: new Color(0xFF333366),
-        color: Colors.redAccent,
+        color: Colors.redAccent[100],
         shape: BoxShape.rectangle,
         borderRadius: new BorderRadius.circular(8.0),
         boxShadow: <BoxShadow>[

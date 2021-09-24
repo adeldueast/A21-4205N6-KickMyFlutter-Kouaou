@@ -95,7 +95,7 @@ class _ConsultationState extends State<Consultation> {
                   Column(
                     children: [
                       Container(
-
+                        margin: EdgeInsets.only(bottom: 8),
                         height: 20,
                         child: Text("Pourcentage de temps écoulé"),
                         alignment: Alignment.bottomLeft,
@@ -160,7 +160,7 @@ class _ConsultationState extends State<Consultation> {
         children: [
           Column(
             children: [
-              Text("Progression de la tâche"),
+              Container(margin: EdgeInsets.only(bottom: 4), child: Text("Progression de la tâche")),
               SimpleTooltip(
                 child: slider(),
                 tooltipDirection: TooltipDirection.right,
