@@ -5,12 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:kick_my_flutter/CustomDrawer.dart';
-import 'package:kick_my_flutter/transfer.dart';
-import 'package:flutter/services.dart';
-
-import '../_textfield.dart';
-import '../lib_http.dart';
+import 'package:kick_my_flutter/CustomWidgets/Custom_Drawer.dart';
+import 'package:kick_my_flutter/Models/transfer.dart';
+import '../CustomWidgets/Custom_Textfield.dart';
+import '../Services/lib_http.dart';
 
 
 
@@ -63,7 +61,7 @@ class _AddTaskState extends State<AddTask> {
           }
         },
       child: Scaffold(
-          drawer: CustomDrawer(
+          drawer: MyCustomDrawer(
           ),
           appBar: AppBar(
             centerTitle: true,
@@ -91,7 +89,7 @@ class _AddTaskState extends State<AddTask> {
                           fontSize: 32,
                           color: Colors.white),
                     ),
-                    MyTextField(
+                    MyCustomTextField(
                       initialvalue: newTaskName,
                       onChange: _updateTaskName,
                       enabled: true,
@@ -101,7 +99,7 @@ class _AddTaskState extends State<AddTask> {
                     Row(
                       children: [
                         Expanded(
-                          child: MyTextField(
+                          child: MyCustomTextField(
                             initialvalue: newTaskDateText,
                             enabled: false,
                             label: "Date",

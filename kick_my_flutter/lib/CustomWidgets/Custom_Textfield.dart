@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class MyTextField extends StatelessWidget {
+class MyCustomTextField extends StatelessWidget {
   final String label;
   final int maxLines;
   final int minLines;
@@ -10,7 +10,7 @@ class MyTextField extends StatelessWidget {
   String? initialvalue;
   final Function(String)? onChange;
 
-  MyTextField(
+  MyCustomTextField(
       {required this.label,
         this.maxLines = 1,
         this.minLines = 1,

@@ -7,12 +7,12 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:kick_my_flutter/CustomDrawer.dart';
+import 'package:kick_my_flutter/CustomWidgets/Custom_Drawer.dart';
 import 'package:kick_my_flutter/Models/Task.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:kick_my_flutter/lib_http.dart';
-import 'package:kick_my_flutter/transfer.dart';
+import 'package:kick_my_flutter/Services/lib_http.dart';
+import 'package:kick_my_flutter/Models/transfer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'Consultation.dart';
@@ -234,7 +234,7 @@ class _AcceuilState extends State<Acceuil> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: CustomDrawer(),
+      drawer: MyCustomDrawer(),
       appBar: AppBar(
         systemOverlayStyle:
             SystemUiOverlayStyle(statusBarColor: Colors.redAccent),

@@ -1,14 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
-import 'package:kick_my_flutter/CustomDrawer.dart';
-import 'package:kick_my_flutter/Models/Task.dart';
-import 'package:kick_my_flutter/lib_http.dart';
-import 'package:kick_my_flutter/transfer.dart';
-import '../_textfield.dart';
+import 'package:kick_my_flutter/CustomWidgets/Custom_Drawer.dart';
+import 'package:kick_my_flutter/Services/lib_http.dart';
+import 'package:kick_my_flutter/Models/transfer.dart';
+import '../CustomWidgets/Custom_Textfield.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
 
@@ -52,7 +49,7 @@ class _ConsultationState extends State<Consultation> {
   void _updateTaskProgression(int id, int valeur) async {
 
   try {
-    var response = await   updateTaskPourcentage(id, valeur);
+    await   updateTaskPourcentage(id, valeur);
 
     //go back to acceuil
     Navigator.of(context).pushReplacementNamed("/screen2");
@@ -65,13 +62,14 @@ class _ConsultationState extends State<Consultation> {
 
   @override
   void initState() {
+    super.initState();
     _getTaskDetail(widget.id);
   }
 
   @override
   Widget build(BuildContext context) {
       return Scaffold(
-        drawer: CustomDrawer(),
+        drawer: MyCustomDrawer(),
         appBar: AppBar(
           backgroundColor: Colors.redAccent,
         ),
@@ -95,13 +93,13 @@ class _ConsultationState extends State<Consultation> {
                         fontSize: 32,
                         color: Colors.redAccent),
                   ),
-                  MyTextField(
+                  MyCustomTextField(
                     initialvalue: this._taskDetailResponse!.name,
                     label: "Title",
                     enabled: false,
                     icon: Icon(FontAwesomeIcons.tasks),
                   ),
-                  MyTextField(
+                  MyCustomTextField(
                     initialvalue: this._taskDetailResponse!.deadLine.toString(),
                     label: "Date",
                     enabled: false,
@@ -135,7 +133,7 @@ class _ConsultationState extends State<Consultation> {
                   Container(
                   margin: EdgeInsets.only(bottom: 1),
                    //color: Colors.yellow,
-                    child: _ProgressBody(),
+                    child: _progressBody(),
                   ),
                   Container(alignment: Alignment.bottomCenter,
                     //color: Colors.blue ,
@@ -162,7 +160,7 @@ class _ConsultationState extends State<Consultation> {
       );
   }
 
-  Widget _ProgressBody() {
+  Widget _progressBody() {
     if (!_showToolTip) {
       return Column(
         children: [

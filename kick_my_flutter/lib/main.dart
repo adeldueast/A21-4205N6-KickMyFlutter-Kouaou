@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kick_my_flutter/Activities/AddTask.dart';
-import 'package:kick_my_flutter/transfer.dart';
+import 'package:kick_my_flutter/Activities/Creation.dart';
+import 'package:kick_my_flutter/Models/transfer.dart';
 import 'Activities/Acceuil.dart';
 import 'Activities/Consultation.dart';
 import 'Activities/Login.dart';

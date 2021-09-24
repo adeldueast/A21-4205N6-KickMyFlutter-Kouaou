@@ -3,8 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:kick_my_flutter/Models/SessionSingleton.dart';
-import 'package:kick_my_flutter/transfer.dart';
-import 'package:kick_my_flutter/lib_http.dart';
+import 'package:kick_my_flutter/Models/transfer.dart';
+import 'package:kick_my_flutter/Services/lib_http.dart';
 
 class LoginScreen extends StatefulWidget {
   @override

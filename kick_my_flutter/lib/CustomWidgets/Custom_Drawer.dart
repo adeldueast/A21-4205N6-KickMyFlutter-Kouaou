@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:kick_my_flutter/Models/SessionSingleton.dart';
-import 'package:kick_my_flutter/lib_http.dart';
+import 'package:kick_my_flutter/Services/lib_http.dart';
 
-import 'Activities/AddTask.dart';
-
-class CustomDrawer extends StatefulWidget {
+class MyCustomDrawer extends StatefulWidget {
   @override
-  State<CustomDrawer> createState() => _CustomDrawerState();
+  State<MyCustomDrawer> createState() => _MyCustomDrawerState();
 }
 
-class _CustomDrawerState extends State<CustomDrawer> {
+class _MyCustomDrawerState extends State<MyCustomDrawer> {
   int _selectedDestination = 0;
 
   void selectDestination(int index) {
