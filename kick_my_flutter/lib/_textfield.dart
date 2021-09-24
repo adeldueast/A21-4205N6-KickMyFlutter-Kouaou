@@ -16,7 +16,8 @@ class MyTextField extends StatelessWidget {
         this.minLines = 1,
         this.icon,
         required this.enabled,
-        this.initialvalue,  this.onChange});
+        this.initialvalue,
+        this.onChange});
 
   @override
   Widget build(BuildContext context) {

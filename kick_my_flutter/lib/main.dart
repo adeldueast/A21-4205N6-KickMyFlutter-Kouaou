@@ -5,7 +5,6 @@ import 'Activities/Acceuil.dart';
 import 'Activities/Consultation.dart';
 import 'Activities/Login.dart';
 
-
 void main() {
   runApp(MyApp());
 }
@@ -18,18 +17,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "TodoApp",
-     theme: ThemeData(fontFamily: "Poppins"),
-     initialRoute: "/screen1",
+      theme: ThemeData(fontFamily: "Poppins"),
+      initialRoute: "/screen1",
       routes: <String, WidgetBuilder>{
         "/screen1": (BuildContext context) => new LoginScreen(),
         "/screen2": (BuildContext context) => new Acceuil(),
         "/screen3": (BuildContext context) => new AddTask(),
-        "/screen4": (BuildContext context) => new Consultation(),
-
+      //  "/screen4": (BuildContext context) => new Consultation(id:null),
       },
     );
   }
 }
-
-
-

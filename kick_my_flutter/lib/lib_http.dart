@@ -66,5 +66,11 @@ Future<List<HomeItemResponse>> getListTask() async {
   }).toList();
 
   return _listTask;
+}
 
+Future<TaskDetailResponse> getTaskDetail(int id) async {
+  var response = await SingletonDio.getDio()
+      .get('https://kickmyb-server.herokuapp.com/api/detail/' + id.toString());
+  print(response.statusCode.toString() + " getTask success");
+  return TaskDetailResponse.fromJson(response.data);
 }

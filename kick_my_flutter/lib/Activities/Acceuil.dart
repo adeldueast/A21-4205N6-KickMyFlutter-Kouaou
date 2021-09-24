@@ -15,6 +15,8 @@ import 'package:kick_my_flutter/lib_http.dart';
 import 'package:kick_my_flutter/transfer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import 'Consultation.dart';
+
 // ACCEUIL PAGE
 class Acceuil extends StatefulWidget {
   const Acceuil({
@@ -323,9 +325,16 @@ class AcceuilBody extends StatelessWidget {
                 delegate: new SliverChildBuilderDelegate(
                   (context, index) => GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pushNamed(
-                          "/screen4",
-                        );
+                        //Navigator.pushNamed(context, "/screen4", arguments: _listeTask[index].id!);
+                        if(  _listeTask[index].id != null)
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Consultation(id: _listeTask[index].id!),
+                            ),
+                          );
+
+
                       },
                       child: new TaskRow(_listeTask[index])),
                   childCount: _listeTask.length,
