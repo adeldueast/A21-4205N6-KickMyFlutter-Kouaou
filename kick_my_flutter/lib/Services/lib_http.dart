@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:kick_my_flutter/Models/Task.dart';
 import 'package:kick_my_flutter/Models/transfer.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
@@ -13,7 +12,7 @@ class SingletonDio {
     return dio;
   }
 }
-
+// je sais pas pk jai mis sa ici lol
 Future<String> cookie() async {
   var response = await SingletonDio.getDio()
       .get('http://exercices-web.herokuapp.com/exos/cookie/echo');

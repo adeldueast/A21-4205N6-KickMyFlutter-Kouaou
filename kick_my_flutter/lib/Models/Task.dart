@@ -10,6 +10,6 @@ class Task {
 
   @override
   String toString() {
-    return 'Task: {name: ${nom}, pourcentageTask: ${pourcentageTask} pourcentage: ${pourcentageTask} dateLimite : ${dateLimite}';
+    return 'Task: {name: $nom, pourcentageTask: $pourcentageTask pourcentage: $pourcentageTask dateLimite : $dateLimite';
   }
 }

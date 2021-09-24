@@ -8,9 +8,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:kick_my_flutter/CustomWidgets/Custom_Drawer.dart';
-import 'package:kick_my_flutter/Models/Task.dart';
-import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:kick_my_flutter/Services/lib_http.dart';
 import 'package:kick_my_flutter/Models/transfer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -208,7 +205,7 @@ class _AcceuilState extends State<Acceuil> {
         });
   }*/
 
-  Future<void> HTTPgetListTask() async {
+  Future<void> _httpGetListTask() async {
     setState(() {
       _isLoading = true;
     });
@@ -228,7 +225,8 @@ class _AcceuilState extends State<Acceuil> {
 
   @override
   void initState() {
-    HTTPgetListTask();
+    super.initState();
+    _httpGetListTask();
   }
 
   @override
@@ -249,7 +247,7 @@ class _AcceuilState extends State<Acceuil> {
             )
           : Container(
               color: Colors.white,
-              child: new AcceuilBody(_listeTask, HTTPgetListTask),
+              child: new AcceuilBody(_listeTask, _httpGetListTask),
             ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.redAccent,
@@ -322,7 +320,7 @@ class AcceuilBody extends StatelessWidget {
                   (context, index) => GestureDetector(
                       onTap: () {
                         //Navigator.pushNamed(context, "/screen4", arguments: _listeTask[index].id!);
-                        if (_listeTask[index].id != null)
+                      //TODO:  removed/enlevé  le !null condition   <<< if (_listeTask[index].id != null) >>> because : The operand can't be null, so the condition is always true.
                           Navigator.push(
 
                             context,

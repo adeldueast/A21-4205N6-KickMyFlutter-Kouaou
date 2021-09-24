@@ -82,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen>
     }
   }
 
-  Widget HomePage() {
+  Widget homePage() {
     return SingleChildScrollView(
       child: Container(
         height: MediaQuery.of(context).size.height,
@@ -210,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget SignupPage() {
+  Widget signupPage() {
     return SingleChildScrollView(
       child: new Container(
         height: MediaQuery.of(context).size.height,
@@ -466,7 +466,7 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget LoginPage() {
+  Widget loginPage() {
     return SingleChildScrollView(
       child: new Container(
         height: MediaQuery.of(context).size.height,
@@ -628,6 +628,7 @@ class _LoginScreenState extends State<LoginScreen>
 
                       // ON PRESS TO PAGE ACCUEUIL NAVIG.ROUTE SCREEN2
                       onPressed: () {
+                        //TODO : The operand can't be null, so the condition is always false. ?? i decided to keep it this way just in case..
                         if (this.signinUsername.isEmpty ||
                             this.signinUsername == null) {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -841,19 +842,9 @@ class _LoginScreenState extends State<LoginScreen>
           child: PageView(
             controller: _controller,
             physics: new AlwaysScrollableScrollPhysics(),
-            children: [LoginPage(), HomePage(), SignupPage()],
+            children: [loginPage(), homePage(), signupPage()],
             scrollDirection: Axis.horizontal,
           )),
-      floatingActionButton: FloatingActionButton(
-          child: Icon(
-            Icons.add,
-            size: 42,
-          ),
-          onPressed: () {
-            Navigator.of(context).pushNamed(
-              "/screen2",
-            );
-          }),
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
-
 part 'transfer.g.dart';
 
 // TODO :  SignUP REQUEST returns a RESPONSE
@@ -110,7 +109,7 @@ class HomeItemResponse {
 
   @override
   String toString() {
-    return 'Task: {name: ${name}, pourcentageTask: ${percentageDone} pourcentage: ${percentageTimeSpent} dateLimite : ${deadline}';
+    return 'Task: {name: $name, pourcentageTask: $percentageDone pourcentage: $percentageTimeSpent dateLimite : $deadline';
   }
 }
 
@@ -132,7 +131,7 @@ class TaskDetailResponse {
 
   @override
   String toString() {
-    return 'TaskDetail: {name: ${name}, pourcentageTaskDone: ${percentageDone} pourcentageDate: ${percentageTimeSpent} dateLimite : ${deadLine}';
+    return 'TaskDetail: {name: $name, pourcentageTaskDone: $percentageDone pourcentageDate: $percentageTimeSpent dateLimite : $deadLine';
   }
 }
 

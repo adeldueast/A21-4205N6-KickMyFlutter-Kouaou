@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class MyCustomTextField extends StatelessWidget {
+ class MyCustomTextField extends StatelessWidget {
   final String label;
   final int maxLines;
   final int minLines;
   final Icon? icon;
   final bool enabled;
-  String? initialvalue;
+  final String? initialvalue;
   final Function(String)? onChange;
 
   MyCustomTextField(
