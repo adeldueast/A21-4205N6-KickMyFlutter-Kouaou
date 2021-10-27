@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:kick_my_flutter/CustomWidgets/Custom_Drawer.dart';
 import 'package:kick_my_flutter/Services/lib_http.dart';
 import 'package:kick_my_flutter/Models/transfer.dart';
@@ -12,21 +16,24 @@ import 'package:simple_tooltip/simple_tooltip.dart';
 class Consultation extends StatefulWidget {
   final int id;
 
-   Consultation({Key? key,  required this.id}) : super(key: key);
+  Consultation({Key? key, required this.id}) : super(key: key);
 
   @override
   State<Consultation> createState() => _ConsultationState();
 }
 
 class _ConsultationState extends State<Consultation> {
-
   // TODO: ask joris about state building while object is null throwing. Error: Null check operator used on a null value for flutter. Meanwhile, we fixed it by using a loader that only load when the httprequest is done , otherwise loading effect.
 
   // TODO: Turned slider into a function that returns a Widget So I could use it, otherwise... Error:  The instance member '_taskDetailResponse' can't be accessed in an initializer.
-    bool _isLoading = false;
-   bool _showToolTip = true;
-   TaskDetailResponse? _taskDetailResponse ;
-   late int _newProgressionTaskValue;
+  bool _isLoading = false;
+  bool _showToolTip = true;
+  TaskDetailResponse? _taskDetailResponse;
+
+  late int _newProgressionTaskValue;
+  XFile? pickedImage;
+  String pickedImagePath = "";
+  ImagePicker picker = new ImagePicker();
 
   void _getTaskDetail(int id) async {
     setState(() {
@@ -39,25 +46,54 @@ class _ConsultationState extends State<Consultation> {
     } on DioError catch (e) {
       print(e.response);
       print(e.message);
-
     }
     setState(() {
       _isLoading = false;
     });
   }
 
-  void _updateTaskProgression(int id, int valeur) async {
+  void _updateTaskDetails(int id, int valeur) async {
+    try {
+      if (pickedImage != null) {
+        //debug purpose
+        print(pickedImage!.name + " , " + pickedImage!.path);
 
-  try {
-    await   updateTaskPourcentage(id, valeur);
+        FormData formData = FormData.fromMap({
+          "file": await MultipartFile.fromFile(pickedImage!.path,
+              filename: pickedImage!.name),
+          "babyID": widget.id,
+        });
 
-    //go back to acceuil
-    Navigator.of(context).pushReplacementNamed("/screen2");
+        await addImageToTask(formData);
+      }
+      await updateTaskPourcentage(id, valeur);
 
-  } on DioError catch (e) {
-    print(e.response);
-    print(e.message);
+
+      //go back to acceuil
+      Navigator.of(context).pushReplacementNamed("/screen2");
+    } on DioError catch (e) {
+      print(e.response);
+      print(e.message);
+    }
   }
+
+  void _selectImage() async {
+    pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    pickedImagePath = pickedImage!.path;
+    setState(() {});
+
+    //debug purposes
+    /*if (pickedImage != null) {
+      print(pickedImage!.name + " , " + pickedImage!.path);
+
+      FormData formData = FormData.fromMap({
+        "file": await MultipartFile.fromFile(pickedImage!.path,
+            filename: pickedImage!.name),
+        "babyID": widget.id,
+      });
+
+      await addImageToTask(formData);
+    }*/
   }
 
   @override
@@ -68,96 +104,143 @@ class _ConsultationState extends State<Consultation> {
 
   @override
   Widget build(BuildContext context) {
-      return Scaffold(
-        drawer: MyCustomDrawer(),
-        appBar: AppBar(
-          backgroundColor: Colors.redAccent,
+    return Scaffold(
+      drawer: MyCustomDrawer(),
+      appBar: AppBar(
+        backgroundColor: Colors.redAccent,
+      ),
+      body: _isLoading
+          ? SpinKitThreeBounce(
+        color: Colors.redAccent,
+        size: 40,
+      )
+          : Container(
+        //    color: Colors.green,
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+          Text(
+          "Consultation",
+          style: TextStyle(
+              fontWeight: FontWeight.w900,
+              fontSize: 32,
+              color: Colors.redAccent),
         ),
-        body:
-        _isLoading?SpinKitThreeBounce(
-          color: Colors.redAccent,
-          size: 40,
-        ) :
-        Container(
-
-      //    color: Colors.green,
-          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-
-          child:  Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Consultation",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w900,
-                        fontSize: 32,
-                        color: Colors.redAccent),
-                  ),
-                  MyCustomTextField(
-                    initialvalue: this._taskDetailResponse!.name,
-                    label: "Title",
-                    enabled: false,
-                    icon: Icon(FontAwesomeIcons.tasks),
-                  ),
-                  MyCustomTextField(
-                    initialvalue: this._taskDetailResponse!.deadLine.toString(),
-                    label: "Date",
-                    enabled: false,
-                    icon: Icon(FontAwesomeIcons.calendarCheck),
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(bottom: 8),
-                        height: 20,
-                        child: Text("Pourcentage de temps écoulé"),
-                        alignment: Alignment.bottomLeft,
-                      ),
-                      Container(
-
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          child: LinearProgressIndicator(
-                            minHeight: 10,
-                            value: this._taskDetailResponse!.percentageTimeSpent.toDouble()/100, //task.percentageTimeSpent!.toDouble(),
-                            valueColor: AlwaysStoppedAnimation(Colors.redAccent),
-                            backgroundColor: Colors.grey[300],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-
-                  // TODO : TOOL TIP + PROGRESS
-                  Container(
-                  margin: EdgeInsets.only(bottom: 1),
-                   //color: Colors.yellow,
-                    child: _progressBody(),
-                  ),
-                  Container(alignment: Alignment.bottomCenter,
-                    //color: Colors.blue ,
-                    child:   ElevatedButton(
-                      style: ButtonStyle(
-                          padding: MaterialStateProperty.all<EdgeInsets>(
-                              EdgeInsets.symmetric(vertical: 5, horizontal: 20)),
-                          backgroundColor: MaterialStateColor.resolveWith(
-                                  (states) => Colors.redAccent)),
-                      onPressed: () => _updateTaskProgression(widget.id, _newProgressionTaskValue),
-                      child: Text(
-                        "SAVE",
-                        style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
-                      ),
-                    ),)
-                  //color: Colors.green,
-                ],
+        MyCustomTextField(
+          initialvalue: this._taskDetailResponse!.name,
+          label: "Title",
+          enabled: false,
+          icon: Icon(FontAwesomeIcons.tasks),
+        ),
+        MyCustomTextField(
+          initialvalue: this._taskDetailResponse!.deadLine.toString(),
+          label: "Date",
+          enabled: false,
+          icon: Icon(FontAwesomeIcons.calendarCheck),
+        ),
+        Column(
+          children: [
+            Container(
+              margin: EdgeInsets.only(bottom: 8),
+              height: 20,
+              child: Text("Pourcentage de temps écoulé"),
+              alignment: Alignment.bottomLeft,
+            ),
+            Container(
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                child: LinearProgressIndicator(
+                  minHeight: 10,
+                  value: this
+                      ._taskDetailResponse!
+                      .percentageTimeSpent
+                      .toDouble() /
+                      100,
+                  //task.percentageTimeSpent!.toDouble(),
+                  valueColor:
+                  AlwaysStoppedAnimation(Colors.redAccent),
+                  backgroundColor: Colors.grey[300],
+                ),
               ),
-
-              
-
-
+            ),
+          ],
         ),
-      );
+
+        // TODO : TOOL TIP + PROGRESS
+        Container(
+          margin: EdgeInsets.only(bottom: 1),
+          //color: Colors.yellow,
+          child: _progressBody(),
+        ),
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.only(bottom: 20),
+            child: (pickedImage != null)
+                ? Container(
+
+              child: Image.file(File(pickedImage!.path)),
+            )
+                : DottedBorder(
+              child: Container(
+
+                width: double.infinity,
+                color: Colors.red,
+                child: Center(child: Text("No image selected")),
+              ),
+            ),
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+          Container(
+          alignment: Alignment.bottomCenter,
+          //color: Colors.blue ,
+          child: ElevatedButton(
+            style: ButtonStyle(
+                padding: MaterialStateProperty.all<EdgeInsets>(
+                    EdgeInsets.symmetric(
+                        vertical: 5, horizontal: 20)),
+                backgroundColor: MaterialStateColor.resolveWith(
+                        (states) => Colors.redAccent)),
+            onPressed: _selectImage,
+            child: Text(
+              "SELECT IMAGE",
+              style: TextStyle(
+                  fontSize: 25, fontWeight: FontWeight.w700),
+            ),
+          ),
+        ),
+        Container(
+          alignment: Alignment.bottomCenter,
+          //color: Colors.blue ,
+          child: ElevatedButton(
+            style: ButtonStyle(
+                padding: MaterialStateProperty.all<EdgeInsets>(
+                    EdgeInsets.symmetric(
+                        vertical: 5, horizontal: 20)),
+                backgroundColor: MaterialStateColor.resolveWith(
+                        (states) => Colors.redAccent)),
+            onPressed: () =>
+                _updateTaskDetails(widget.id, _newProgressionTaskValue),
+            child: Text(
+            "SAVE",
+            style: TextStyle(
+                fontSize: 25, fontWeight: FontWeight.w700),
+          ),
+        ),
+      )
+      ],
+    )
+    //color: Colors.green,
+    ],
+    )
+    ,
+    )
+    ,
+    );
   }
 
   Widget _progressBody() {
@@ -173,7 +256,9 @@ class _ConsultationState extends State<Consultation> {
         children: [
           Column(
             children: [
-              Container(margin: EdgeInsets.only(bottom: 4), child: Text("Progression de la tâche")),
+              Container(
+                  margin: EdgeInsets.only(bottom: 4),
+                  child: Text("Progression de la tâche")),
               SimpleTooltip(
                 child: slider(),
                 tooltipDirection: TooltipDirection.right,
@@ -185,12 +270,12 @@ class _ConsultationState extends State<Consultation> {
                   children: [
                     Expanded(
                         child: Text(
-                      "Slide to change the progression",
-                      style: TextStyle(
-                          fontSize: 12,
-                          decoration: TextDecoration.none,
-                          color: Colors.blueGrey),
-                    )),
+                          "Slide to change the progression",
+                          style: TextStyle(
+                              fontSize: 12,
+                              decoration: TextDecoration.none,
+                              color: Colors.blueGrey),
+                        )),
                   ],
                 ),
                 show: true,
@@ -206,29 +291,22 @@ class _ConsultationState extends State<Consultation> {
       );
   }
 
-  Widget slider() { return SleekCircularSlider(
-      initialValue: _taskDetailResponse!.percentageDone.toDouble(),
-      appearance: CircularSliderAppearance(
-
-          size: 130,
-          customColors: CustomSliderColors(
-
-            progressBarColor: Colors.redAccent,
-            dotColor: Colors.white,
-            trackColor: Colors.redAccent,
-          ),
-          infoProperties: InfoProperties(
-
-              mainLabelStyle: TextStyle(color: Colors.black, fontSize: 28))),
-      min: 0,
-      max: 100,
-      onChange: (double value) {
-
-        _newProgressionTaskValue=value.toInt();
-
-      }
-
-
-
-  );}
+  Widget slider() {
+    return SleekCircularSlider(
+        initialValue: _taskDetailResponse!.percentageDone.toDouble(),
+        appearance: CircularSliderAppearance(
+            size: 130,
+            customColors: CustomSliderColors(
+              progressBarColor: Colors.redAccent,
+              dotColor: Colors.white,
+              trackColor: Colors.redAccent,
+            ),
+            infoProperties: InfoProperties(
+                mainLabelStyle: TextStyle(color: Colors.black, fontSize: 28))),
+        min: 0,
+        max: 100,
+        onChange: (double value) {
+          _newProgressionTaskValue = value.toInt();
+        });
+  }
 }

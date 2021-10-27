@@ -41,7 +41,8 @@ dependencies:
   custom_refresh_indicator: ^1.0.0
   sleek_circular_slider: ^2.0.1
   simple_tooltip: ^1.0.0
-
+  image_picker: ^0.8.4+3
+  dotted_border: ^2.0.0+1
 
 dev_dependencies:
   flutter_test:
