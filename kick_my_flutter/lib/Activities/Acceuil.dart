@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -320,16 +321,14 @@ class AcceuilBody extends StatelessWidget {
                   (context, index) => GestureDetector(
                       onTap: () {
                         //Navigator.pushNamed(context, "/screen4", arguments: _listeTask[index].id!);
-                      //TODO:  removed/enlevé  le !null condition   <<< if (_listeTask[index].id != null) >>> because : The operand can't be null, so the condition is always true.
-                          Navigator.push(
-
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  Consultation(id: _listeTask[index].id),
-
-                            ),
-                          );
+                        //TODO:  removed/enlevé  le !null condition   <<< if (_listeTask[index].id != null) >>> because : The operand can't be null, so the condition is always true.
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                Consultation(id: _listeTask[index].id),
+                          ),
+                        );
                       },
                       child: new TaskRow(_listeTask[index])),
                   childCount: _listeTask.length,
@@ -386,24 +385,28 @@ class TaskRow extends StatelessWidget {
             children: <Widget>[
               Expanded(
                 child: Container(
-
-                  child: Stack(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 20,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          child: LinearProgressIndicator(
-                            value: task.percentageTimeSpent.toDouble()/100,
-                            backgroundColor: Colors.white,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-                          ),
+                    child: Stack(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 20,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                        child: LinearProgressIndicator(
+                          value: task.percentageTimeSpent.toDouble() / 100,
+                          backgroundColor: Colors.white,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
                         ),
                       ),
-                      Align(child: Text((task.percentageTimeSpent.toDouble()/100).round().toString()+" %"), alignment: Alignment.topCenter,),
-                    ],
-                  )
-                ),
+                    ),
+                    Align(
+                      child: Text((task.percentageTimeSpent.toDouble() / 100)
+                              .round()
+                              .toString() +
+                          " %"),
+                      alignment: Alignment.topCenter,
+                    ),
+                  ],
+                )),
                 flex: 1,
               ),
               Flexible(
@@ -427,25 +430,33 @@ class TaskRow extends StatelessWidget {
           vertical: 0,
         ),
         alignment: FractionalOffset.centerLeft,
-        child:
-            // new Image(
-            // image: new AssetImage("assets/images/mars.png"),
-            // height: 92.0,
-            // width: 92.0,
-            // ),
-            Container(
-          width: 96,
-          height: 96,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.white,
-          ),
-          child: Icon(
-            FontAwesomeIcons.list,
-            size: 40,
-            color: Colors.redAccent,
-          ),
-        ));
+        child: Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+            ),
+            //"http://10.0.2.2:8080/file/baby/"+task.id.toString()
+            child: ClipOval(
+              child: CachedNetworkImage(
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => Icon(
+                  FontAwesomeIcons.list,
+                  size: 40,
+                  color: Colors.redAccent,
+                ),
+                imageUrl:
+                    "http://10.0.2.2:8080/file/baby/" + task.id.toString()+"?&width="+"100",width: 100,
+                fit: BoxFit.cover,
+              ),
+            )));
+    // new Image(
+    // image: new AssetImage("assets/images/mars.png"),
+    // height: 92.0,
+    // width: 92.0,
+    // ),
 
     final taskCard = new Container(
       height: 140.0,

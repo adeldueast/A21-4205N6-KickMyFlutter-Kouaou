@@ -1,5 +1,7 @@
 
 
+import 'dart:io';
+
 class SessionSingleton {
 
   //Singleton
@@ -10,6 +12,7 @@ class SessionSingleton {
   //getter
   static SessionSingleton get shared => _singleton;
 
+  Cookie? cookie;
   String? username;
   String? password;
 

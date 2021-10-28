@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:kick_my_flutter/Models/SessionSingleton.dart';
 import 'package:kick_my_flutter/Models/transfer.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
@@ -24,9 +27,13 @@ Future<String> cookie() async {
 Future<SignupResponse> signup(SignupRequest request) async {
   var response = await SingletonDio.getDio()
       .post('http://10.0.2.2:8080/api/id/signup', data: request);
+
   print(response);
   if (response.statusCode == 200)
     print(response.statusCode.toString() + " logged in success");
+    List<Cookie> cookies = await SingletonDio.cookieManager.cookieJar.loadForRequest(Uri.parse("http://10.0.2.2:8080/api/id/signup"));
+    SessionSingleton.shared.cookie = cookies.first;
+
 
   return SignupResponse.fromJson(response.data);
 }
@@ -37,7 +44,8 @@ Future<SigninResponse> signin(SigninRequest request) async {
   print(response);
   if (response.statusCode == 200)
     print(response.statusCode.toString() + " signin success");
-
+    List<Cookie> cookies = await SingletonDio.cookieManager.cookieJar.loadForRequest(Uri.parse("http://10.0.2.2:8080/api/id/signin"));
+    SessionSingleton.shared.cookie = cookies.first;
   return SigninResponse.fromJson(response.data);
 }
 

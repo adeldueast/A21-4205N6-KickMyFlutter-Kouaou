@@ -68,7 +68,6 @@ class _ConsultationState extends State<Consultation> {
       }
       await updateTaskPourcentage(id, valeur);
 
-
       //go back to acceuil
       Navigator.of(context).pushReplacementNamed("/screen2");
     } on DioError catch (e) {
@@ -81,19 +80,6 @@ class _ConsultationState extends State<Consultation> {
     pickedImage = await picker.pickImage(source: ImageSource.gallery);
     pickedImagePath = pickedImage!.path;
     setState(() {});
-
-    //debug purposes
-    /*if (pickedImage != null) {
-      print(pickedImage!.name + " , " + pickedImage!.path);
-
-      FormData formData = FormData.fromMap({
-        "file": await MultipartFile.fromFile(pickedImage!.path,
-            filename: pickedImage!.name),
-        "babyID": widget.id,
-      });
-
-      await addImageToTask(formData);
-    }*/
   }
 
   @override
@@ -111,135 +97,141 @@ class _ConsultationState extends State<Consultation> {
       ),
       body: _isLoading
           ? SpinKitThreeBounce(
-        color: Colors.redAccent,
-        size: 40,
-      )
-          : Container(
-        //    color: Colors.green,
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-          Text(
-          "Consultation",
-          style: TextStyle(
-              fontWeight: FontWeight.w900,
-              fontSize: 32,
-              color: Colors.redAccent),
-        ),
-        MyCustomTextField(
-          initialvalue: this._taskDetailResponse!.name,
-          label: "Title",
-          enabled: false,
-          icon: Icon(FontAwesomeIcons.tasks),
-        ),
-        MyCustomTextField(
-          initialvalue: this._taskDetailResponse!.deadLine.toString(),
-          label: "Date",
-          enabled: false,
-          icon: Icon(FontAwesomeIcons.calendarCheck),
-        ),
-        Column(
-          children: [
-            Container(
-              margin: EdgeInsets.only(bottom: 8),
-              height: 20,
-              child: Text("Pourcentage de temps écoulé"),
-              alignment: Alignment.bottomLeft,
-            ),
-            Container(
-              child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                child: LinearProgressIndicator(
-                  minHeight: 10,
-                  value: this
-                      ._taskDetailResponse!
-                      .percentageTimeSpent
-                      .toDouble() /
-                      100,
-                  //task.percentageTimeSpent!.toDouble(),
-                  valueColor:
-                  AlwaysStoppedAnimation(Colors.redAccent),
-                  backgroundColor: Colors.grey[300],
-                ),
-              ),
-            ),
-          ],
-        ),
-
-        // TODO : TOOL TIP + PROGRESS
-        Container(
-          margin: EdgeInsets.only(bottom: 1),
-          //color: Colors.yellow,
-          child: _progressBody(),
-        ),
-        Expanded(
-          child: Container(
-            margin: EdgeInsets.only(bottom: 20),
-            child: (pickedImage != null)
-                ? Container(
-
-              child: Image.file(File(pickedImage!.path)),
+              color: Colors.redAccent,
+              size: 40,
             )
-                : DottedBorder(
-              child: Container(
+          : Container(
+              //    color: Colors.green,
+              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
 
-                width: double.infinity,
-                color: Colors.red,
-                child: Center(child: Text("No image selected")),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Consultation",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 32,
+                        color: Colors.redAccent),
+                  ),
+                  MyCustomTextField(
+                    initialvalue: this._taskDetailResponse!.name,
+                    label: "Title",
+                    enabled: false,
+                    icon: Icon(FontAwesomeIcons.tasks),
+                  ),
+                  MyCustomTextField(
+                    initialvalue: this._taskDetailResponse!.deadLine.toString(),
+                    label: "Date",
+                    enabled: false,
+                    icon: Icon(FontAwesomeIcons.calendarCheck),
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(bottom: 8),
+                        height: 20,
+                        child: Text("Pourcentage de temps écoulé"),
+                        alignment: Alignment.bottomLeft,
+                      ),
+                      Container(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          child: LinearProgressIndicator(
+                            minHeight: 10,
+                            value: this
+                                    ._taskDetailResponse!
+                                    .percentageTimeSpent
+                                    .toDouble() /
+                                100,
+                            //task.percentageTimeSpent!.toDouble(),
+                            valueColor:
+                                AlwaysStoppedAnimation(Colors.redAccent),
+                            backgroundColor: Colors.grey[300],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // TODO : TOOL TIP + PROGRESS
+                  Container(
+                    margin: EdgeInsets.only(bottom: 1),
+                    //color: Colors.yellow,
+                    child: _progressBody(),
+                  ),
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 20),
+                      child: (pickedImage != null)
+                          ? Container(
+                              color: Colors.red,
+                              width: double.infinity,
+                              height: double.infinity,
+                              child: Image.file(
+                                File(pickedImage!.path),
+                                fit: BoxFit.contain  ,
+                              ),
+                            )
+                          : DottedBorder(
+                              child: Container(
+                                width: double.infinity,
+                                //  color: Colors.red,
+                                child: Center(
+                                    child: Text(
+                                  "No image selected 😢",
+                                  style: TextStyle(fontSize: 30),
+                                )),
+                              ),
+                            ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                        alignment: Alignment.bottomCenter,
+                        //color: Colors.blue ,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                              padding: MaterialStateProperty.all<EdgeInsets>(
+                                  EdgeInsets.symmetric(
+                                      vertical: 5, horizontal: 20)),
+                              backgroundColor: MaterialStateColor.resolveWith(
+                                  (states) => Colors.redAccent)),
+                          onPressed: _selectImage,
+                          child: Text(
+                            "SELECT IMAGE",
+                            style: TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.bottomCenter,
+                        //color: Colors.blue ,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                              padding: MaterialStateProperty.all<EdgeInsets>(
+                                  EdgeInsets.symmetric(
+                                      vertical: 5, horizontal: 20)),
+                              backgroundColor: MaterialStateColor.resolveWith(
+                                  (states) => Colors.redAccent)),
+                          onPressed: () => _updateTaskDetails(
+                              widget.id, _newProgressionTaskValue),
+                          child: Text(
+                            "SAVE",
+                            style: TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                  //color: Colors.green,
+                ],
               ),
             ),
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-          Container(
-          alignment: Alignment.bottomCenter,
-          //color: Colors.blue ,
-          child: ElevatedButton(
-            style: ButtonStyle(
-                padding: MaterialStateProperty.all<EdgeInsets>(
-                    EdgeInsets.symmetric(
-                        vertical: 5, horizontal: 20)),
-                backgroundColor: MaterialStateColor.resolveWith(
-                        (states) => Colors.redAccent)),
-            onPressed: _selectImage,
-            child: Text(
-              "SELECT IMAGE",
-              style: TextStyle(
-                  fontSize: 25, fontWeight: FontWeight.w700),
-            ),
-          ),
-        ),
-        Container(
-          alignment: Alignment.bottomCenter,
-          //color: Colors.blue ,
-          child: ElevatedButton(
-            style: ButtonStyle(
-                padding: MaterialStateProperty.all<EdgeInsets>(
-                    EdgeInsets.symmetric(
-                        vertical: 5, horizontal: 20)),
-                backgroundColor: MaterialStateColor.resolveWith(
-                        (states) => Colors.redAccent)),
-            onPressed: () =>
-                _updateTaskDetails(widget.id, _newProgressionTaskValue),
-            child: Text(
-            "SAVE",
-            style: TextStyle(
-                fontSize: 25, fontWeight: FontWeight.w700),
-          ),
-        ),
-      )
-      ],
-    )
-    //color: Colors.green,
-    ],
-    )
-    ,
-    )
-    ,
     );
   }
 
@@ -270,12 +262,12 @@ class _ConsultationState extends State<Consultation> {
                   children: [
                     Expanded(
                         child: Text(
-                          "Slide to change the progression",
-                          style: TextStyle(
-                              fontSize: 12,
-                              decoration: TextDecoration.none,
-                              color: Colors.blueGrey),
-                        )),
+                      "Slide to change the progression",
+                      style: TextStyle(
+                          fontSize: 12,
+                          decoration: TextDecoration.none,
+                          color: Colors.blueGrey),
+                    )),
                   ],
                 ),
                 show: true,
