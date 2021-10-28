@@ -212,13 +212,17 @@ class _AcceuilState extends State<Acceuil> {
       _isLoading = true;
     });
     try {
+      // afficher
       _listeTask = await getListTask();
+      // arreter
       /*  for (var o in _listeTask) {
         print(o.toString());
       }*/
     } on DioError catch (e) {
+      // arreter
       print(e.response!.data);
     }
+
 
     setState(() {
       _isLoading = false;
@@ -241,7 +245,7 @@ class _AcceuilState extends State<Acceuil> {
         backgroundColor: Colors.redAccent,
         centerTitle: true,
         //TODO: I18N
-        title: Text("Locs.of(context).trans('home')"),
+        title: Text(Locs.of(context).trans('home')),
       ),
       body: _isLoading
           ? SpinKitThreeBounce(
@@ -442,6 +446,7 @@ class TaskRow extends StatelessWidget {
             //"http://10.0.2.2:8080/file/baby/"+task.id.toString()
             child: ClipOval(
               child: CachedNetworkImage(
+
                 placeholder: (context, url) =>
                     const CircularProgressIndicator(),
                 errorWidget: (context, url, error) => Icon(

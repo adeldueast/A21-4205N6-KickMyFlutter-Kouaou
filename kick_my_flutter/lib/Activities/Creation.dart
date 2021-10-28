@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:kick_my_flutter/CustomWidgets/Custom_Drawer.dart';
 import 'package:kick_my_flutter/Models/transfer.dart';
+import 'package:kick_my_flutter/i18n/intl_localization.dart';
 import '../CustomWidgets/Custom_Textfield.dart';
 import '../Services/lib_http.dart';
 
@@ -83,7 +84,7 @@ class _AddTaskState extends State<AddTask> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Create a task",
+                      Locs.of(context).trans('create_task'),
                       style: TextStyle(
                           fontWeight: FontWeight.w900,
                           fontSize: 32,
@@ -93,7 +94,7 @@ class _AddTaskState extends State<AddTask> {
                       initialvalue: newTaskName,
                       onChange: _updateTaskName,
                       enabled: true,
-                      label: "Title",
+                      label: Locs.of(context).trans("title"),
                       icon: Icon(FontAwesomeIcons.tasks),
                     ),
                     Row(
@@ -151,13 +152,13 @@ class _AddTaskState extends State<AddTask> {
                       textStyle: TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.bold)),
-                  child: Text("Add +"),
+                  child: Text(Locs.of(context).trans("add_+")),
 
                   onPressed: () async {
 
                       if(newTaskName.isEmpty||newTaskDate==null||newTaskName =="")
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text("Make sure you picked a name and a  date")));
+                            content: Text(Locs.of(context).trans("invalid_create_task"))));
                       else{
                         try {
                           AddTaskRequest req = AddTaskRequest();

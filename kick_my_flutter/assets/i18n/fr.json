@@ -21,8 +21,21 @@
   "password_empty": "Champ mot de passe est vide",
 
   "home": "Accueil",
+  "add_task": "Ajouter une tâche",
+  "logout": "Se déconnecter",
 
-  "add_task": "Add task"
+  "create_task" :"Créer une tâche",
+  "invalid_create_task": "Assurez-vous d'entrer un nom et une date",
+  "add_+": "Ajouter +",
+  "title": "Titre",
+
+
+  "pourcentage_timeleft": "Pourcentage de temps écoulé",
+  "progression_task": "Progression de la tâche",
+  "no_image_selected": "Aucune image sélectionnée \uD83D\uDE22",
+  "save": "Sauvegarder",
+  "select_image": "Selectionnez une image",
+  "slide_tooltip": "Glisser pour changer la progression"
 
 
 }

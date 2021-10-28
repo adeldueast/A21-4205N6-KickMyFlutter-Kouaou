@@ -839,7 +839,8 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      body: Container(
+
+        body: Container(
           height: MediaQuery.of(context).size.height,
           child: PageView(
             controller: _controller,

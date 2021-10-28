@@ -20,7 +20,23 @@
   "username_empty": "Username field is empty",
   "password_empty": "Password field is empty",
 
-  "home": "Home"
+  "home": "Home",
+  "add_task": "Add a task",
+  "logout": "Logout",
+
+  "create_task" :"Create a task",
+  "invalid_create_task": "Make sure you picked a name and a  date",
+  "add_+": "Add +",
+  "title": "Title",
+
+  "pourcentage_timeleft": "Pourcentage of time spent",
+  "progression_task": "Task's progression",
+  "no_image_selected": "No image selected \uD83D\uDE22",
+  "save": "Save",
+  "select_image": "Select an image",
+  "slide_tooltip": "Slide to change the progression"
+
+
 
 
 }

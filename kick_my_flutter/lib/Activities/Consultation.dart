@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:kick_my_flutter/CustomWidgets/Custom_Drawer.dart';
 import 'package:kick_my_flutter/Services/lib_http.dart';
 import 'package:kick_my_flutter/Models/transfer.dart';
+import 'package:kick_my_flutter/i18n/intl_localization.dart';
 import '../CustomWidgets/Custom_Textfield.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
@@ -116,7 +117,7 @@ class _ConsultationState extends State<Consultation> {
                   ),
                   MyCustomTextField(
                     initialvalue: this._taskDetailResponse!.name,
-                    label: "Title",
+                    label: Locs.of(context).trans("title"),
                     enabled: false,
                     icon: Icon(FontAwesomeIcons.tasks),
                   ),
@@ -131,7 +132,8 @@ class _ConsultationState extends State<Consultation> {
                       Container(
                         margin: EdgeInsets.only(bottom: 8),
                         height: 20,
-                        child: Text("Pourcentage de temps écoulé"),
+                        child: Text(
+                            Locs.of(context).trans("pourcentage_timeleft")),
                         alignment: Alignment.bottomLeft,
                       ),
                       Container(
@@ -170,7 +172,7 @@ class _ConsultationState extends State<Consultation> {
                               height: double.infinity,
                               child: Image.file(
                                 File(pickedImage!.path),
-                                fit: BoxFit.contain  ,
+                                fit: BoxFit.contain,
                               ),
                             )
                           : DottedBorder(
@@ -179,7 +181,7 @@ class _ConsultationState extends State<Consultation> {
                                 //  color: Colors.red,
                                 child: Center(
                                     child: Text(
-                                  "No image selected 😢",
+                                  Locs.of(context).trans("no_image_selected"),
                                   style: TextStyle(fontSize: 30),
                                 )),
                               ),
@@ -187,7 +189,7 @@ class _ConsultationState extends State<Consultation> {
                     ),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
                         alignment: Alignment.bottomCenter,
@@ -201,9 +203,9 @@ class _ConsultationState extends State<Consultation> {
                                   (states) => Colors.redAccent)),
                           onPressed: _selectImage,
                           child: Text(
-                            "SELECT IMAGE",
+                            Locs.of(context).trans("select_image"),
                             style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.w700),
+                                fontSize: 12, fontWeight: FontWeight.w700),
                           ),
                         ),
                       ),
@@ -214,15 +216,15 @@ class _ConsultationState extends State<Consultation> {
                           style: ButtonStyle(
                               padding: MaterialStateProperty.all<EdgeInsets>(
                                   EdgeInsets.symmetric(
-                                      vertical: 5, horizontal: 20)),
+                                      vertical: 5, horizontal: 12)),
                               backgroundColor: MaterialStateColor.resolveWith(
                                   (states) => Colors.redAccent)),
                           onPressed: () => _updateTaskDetails(
                               widget.id, _newProgressionTaskValue),
                           child: Text(
-                            "SAVE",
+                            Locs.of(context).trans("save"),
                             style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.w700),
+                                fontSize: 12, fontWeight: FontWeight.w700),
                           ),
                         ),
                       )
@@ -239,7 +241,7 @@ class _ConsultationState extends State<Consultation> {
     if (!_showToolTip) {
       return Column(
         children: [
-          Text("Progression de la tâche"),
+          Text(Locs.of(context).trans("progression_task")),
           slider(),
         ],
       );
@@ -250,7 +252,7 @@ class _ConsultationState extends State<Consultation> {
             children: [
               Container(
                   margin: EdgeInsets.only(bottom: 4),
-                  child: Text("Progression de la tâche")),
+                  child: Text(Locs.of(context).trans("progression_task"))),
               SimpleTooltip(
                 child: slider(),
                 tooltipDirection: TooltipDirection.right,
@@ -262,7 +264,7 @@ class _ConsultationState extends State<Consultation> {
                   children: [
                     Expanded(
                         child: Text(
-                      "Slide to change the progression",
+                      Locs.of(context).trans("slide_tooltip"),
                       style: TextStyle(
                           fontSize: 12,
                           decoration: TextDecoration.none,

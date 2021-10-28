@@ -36,7 +36,7 @@ class _MyCustomDrawerState extends State<MyCustomDrawer> {
               ListTile(
                   leading: Icon(Icons.home),
                   //TODO: i18n
-                  title: Text("Locs.of(context).trans('home')"),
+                  title: Text(Locs.of(context).trans('home')),
 
                   selected: ModalRoute.of(context)!.settings.name == "/screen2",
                   onTap: () => {
@@ -54,7 +54,7 @@ class _MyCustomDrawerState extends State<MyCustomDrawer> {
                       }),
               ListTile(
                 leading: Icon(Icons.add),
-                title: Text("Locs.of(context).trans('add_task')"),
+                title: Text(Locs.of(context).trans('add_task')),
                 selected: ModalRoute.of(context)!.settings.name == "/screen3",
                 onTap: () => {
                   selectDestination(1),
@@ -76,7 +76,7 @@ class _MyCustomDrawerState extends State<MyCustomDrawer> {
               ),
               ListTile(
                 leading: Icon(Icons.logout_outlined),
-                title: Text('Log out'),
+                title: Text(Locs.of(context).trans('logout')),
                 selected: _selectedDestination == 2,
                 onTap: () => {
                   selectDestination(2),

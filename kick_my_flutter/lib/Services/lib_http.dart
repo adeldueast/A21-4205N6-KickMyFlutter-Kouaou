@@ -8,9 +8,12 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 
 class SingletonDio {
   static var cookieManager = CookieManager(CookieJar());
-
+ static  BaseOptions options = new BaseOptions(
+   connectTimeout: 5000,
+    receiveTimeout: 3000,
+  );
   static Dio getDio() {
-    Dio dio = Dio();
+    Dio dio = Dio(options);
     dio.interceptors.add(cookieManager);
     return dio;
   }
@@ -65,7 +68,9 @@ logout() async {
 
 Future<List<HomeItemResponse>> getListTask() async {
   var response =
-      await SingletonDio.getDio().get('http://10.0.2.2:8080/api/home');
+      await SingletonDio.getDio().get('http://10.0.2.2:8080/api/home',
+
+      );
   if (response.statusCode == 200)
     print(response.statusCode.toString() + " getListTask success");
 
