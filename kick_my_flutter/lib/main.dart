@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:kick_my_flutter/Activities/Creation.dart';
+import 'package:kick_my_flutter/i18n/intl_delegate.dart';
+
 import 'Activities/Acceuil.dart';
 import 'Activities/Login.dart';
 
@@ -17,6 +20,21 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "TodoApp",
       theme: ThemeData(fontFamily: "Poppins"),
+
+      localizationsDelegates: [
+        DemoDelegate(),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      // TODO annoncer les locales qui sont gerees
+      supportedLocales: [
+        const Locale('en'),
+        const Locale('fr'),
+      ],
+
+
+
       initialRoute: "/screen1",
       routes: <String, WidgetBuilder>{
         "/screen1": (BuildContext context) => new LoginScreen(),

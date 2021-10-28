@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kick_my_flutter/Models/SessionSingleton.dart';
 import 'package:kick_my_flutter/Services/lib_http.dart';
+import 'package:kick_my_flutter/i18n/intl_localization.dart';
 
 class MyCustomDrawer extends StatefulWidget {
   @override
@@ -34,7 +35,8 @@ class _MyCustomDrawerState extends State<MyCustomDrawer> {
                       "https://cdn-icons-png.flaticon.com/512/3135/3135715.png")),
               ListTile(
                   leading: Icon(Icons.home),
-                  title: Text('Home'),
+                  //TODO: i18n
+                  title: Text("Locs.of(context).trans('home')"),
 
                   selected: ModalRoute.of(context)!.settings.name == "/screen2",
                   onTap: () => {
@@ -52,7 +54,7 @@ class _MyCustomDrawerState extends State<MyCustomDrawer> {
                       }),
               ListTile(
                 leading: Icon(Icons.add),
-                title: Text('Add task'),
+                title: Text("Locs.of(context).trans('add_task')"),
                 selected: ModalRoute.of(context)!.settings.name == "/screen3",
                 onTap: () => {
                   selectDestination(1),

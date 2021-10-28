@@ -1,0 +1,28 @@
+
+{
+  "username" : "Utilisateur",
+  "password" : "Mot de passe",
+  "confirm_password" : "Confirmation de mot de passe",
+  "forgot_password" : "Mot de passe oublié?",
+  "acc_already_exist" : "Vous avez déjà un compte?",
+
+  "login" : "SE CONNECTER",
+  "signup" : "S'INSCRIRE",
+
+  "username_taken" : "Nom d'utilisateur déjà pris",
+  "error_occurred": "Une erreur s'est produite",
+  "wrong_infos": "Mauvais identifiant ou mot de passe",
+
+  "both_password_identical": "Les mots de passes ne se ressemblent pas",
+
+  "connect_with" : "OU-CONNECTEZ-VOUS AVEC",
+
+  "username_empty": "Champ utilisateur est vide",
+  "password_empty": "Champ mot de passe est vide",
+
+  "home": "Accueil",
+
+  "add_task": "Add task"
+
+
+}

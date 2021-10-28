@@ -1,0 +1,26 @@
+
+{
+  "username" : "Username",
+  "password" : "Password",
+  "confirm_password" : "Confirm password",
+  "forgot_password" : "Forgot password?",
+  "acc_already_exist" : "Already have an account?",
+
+  "login" : "LOGIN",
+  "signup" : "SIGNUP",
+
+  "username_taken" : "Username is already taken",
+  "error_occurred": "An error just occurred",
+  "wrong_infos": "Wrong username or password",
+
+  "both_password_identical": "Passwords are not identical",
+
+  "connect_with" : "OR CONNECT WITH",
+
+  "username_empty": "Username field is empty",
+  "password_empty": "Password field is empty",
+
+  "home": "Home"
+
+
+}

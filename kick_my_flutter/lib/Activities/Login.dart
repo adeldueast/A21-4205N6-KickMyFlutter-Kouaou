@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:kick_my_flutter/Models/SessionSingleton.dart';
 import 'package:kick_my_flutter/Models/transfer.dart';
 import 'package:kick_my_flutter/Services/lib_http.dart';
+import 'package:kick_my_flutter/i18n/intl_localization.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -41,10 +42,10 @@ class _LoginScreenState extends State<LoginScreen>
       String message = e.response!.data;
       if (message == "BadCredentialsException") {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Username already taken")));
+            .showSnackBar(SnackBar(content: Text(Locs.of(context).trans('username_taken'))));
       } else {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("An error just occured")));
+            .showSnackBar(SnackBar(content: Text(Locs.of(context).trans("error_occurred"))));
       }
 
 
@@ -71,11 +72,11 @@ class _LoginScreenState extends State<LoginScreen>
 
       if (message =="InternalAuthenticationServiceException"){
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Wrong username or password")));
+            .showSnackBar(SnackBar(content: Text(       Locs.of(context).trans("wrong_infos"))));
       }
       else{
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("An error just occured")));
+            .showSnackBar(SnackBar(content: Text(       Locs.of(context).trans("error_occurred"))));
       }
 
 
@@ -149,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen>
                               children: <Widget>[
                                 new Expanded(
                                   child: Text(
-                                    "LOGIN",
+                                Locs.of(context).trans('login'),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         color: Colors.redAccent,
@@ -187,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen>
                               children: <Widget>[
                                 new Expanded(
                                   child: Text(
-                                    "SIGNUP",
+                                Locs.of(context).trans('signup'),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         color: Colors.redAccent,
@@ -235,7 +236,7 @@ class _LoginScreenState extends State<LoginScreen>
                   child: new Padding(
                     padding: const EdgeInsets.only(left: 40.0),
                     child: new Text(
-                      "Username",
+                    Locs.of(context).trans("username"),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.redAccent,
@@ -289,7 +290,7 @@ class _LoginScreenState extends State<LoginScreen>
                   child: new Padding(
                     padding: const EdgeInsets.only(left: 40.0),
                     child: new Text(
-                      "PASSWORD",
+                        Locs.of(context).trans('password'),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.redAccent,
@@ -343,7 +344,7 @@ class _LoginScreenState extends State<LoginScreen>
                   child: new Padding(
                     padding: const EdgeInsets.only(left: 40.0),
                     child: new Text(
-                      "CONFIRM PASSWORD",
+                        Locs.of(context).trans('confirm_password'),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.redAccent,
@@ -399,7 +400,7 @@ class _LoginScreenState extends State<LoginScreen>
                   child: new FlatButton(
                     onPressed: () => gotoLogin(),
                     child: new Text(
-                      "Already have an account?",
+                        Locs.of(context).trans('acc_already_exist'),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.redAccent,
@@ -428,7 +429,7 @@ class _LoginScreenState extends State<LoginScreen>
                         if (this.signupPW1 != this.signupPW2) {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text(
-                                  "Make sure both password are identical")));
+                                Locs.of(context).trans('both_password_identical'),)));
                           return;
                         }
 
@@ -444,7 +445,7 @@ class _LoginScreenState extends State<LoginScreen>
                           children: <Widget>[
                             new Expanded(
                               child: Text(
-                                "SIGNUP",
+                            Locs.of(context).trans('signup'),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.white,
@@ -491,7 +492,7 @@ class _LoginScreenState extends State<LoginScreen>
                   child: new Padding(
                     padding: const EdgeInsets.only(left: 40.0),
                     child: new Text(
-                      "Username",
+                      Locs.of(context).trans("username"),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.redAccent,
@@ -528,7 +529,7 @@ class _LoginScreenState extends State<LoginScreen>
                       textAlign: TextAlign.left,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'username',
+                        hintText: Locs.of(context).trans("username"),
                         hintStyle: TextStyle(color: Colors.grey),
                       ),
                     ),
@@ -545,7 +546,7 @@ class _LoginScreenState extends State<LoginScreen>
                   child: new Padding(
                     padding: const EdgeInsets.only(left: 40.0),
                     child: new Text(
-                      "PASSWORD",
+                        Locs.of(context).trans('password'),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.redAccent,
@@ -600,7 +601,7 @@ class _LoginScreenState extends State<LoginScreen>
                   padding: const EdgeInsets.only(right: 20.0),
                   child: new FlatButton(
                     child: new Text(
-                      "Forgot Password?",
+                        Locs.of(context).trans('forgot_password'),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.redAccent,
@@ -632,12 +633,12 @@ class _LoginScreenState extends State<LoginScreen>
                         if (this.signinUsername.isEmpty ||
                             this.signinUsername == null) {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text("Username field is empty")));
+                              content: Text(Locs.of(context).trans('username_empty'))));
                           return;
                         } else if (this.signinPassword.isEmpty ||
                             this.signinPassword == null) {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text("Password field is empty")));
+                              content: Text(Locs.of(context).trans("password_empty"))));
                           return;
                         }
                         httpSignin();
@@ -652,7 +653,7 @@ class _LoginScreenState extends State<LoginScreen>
                           children: <Widget>[
                             new Expanded(
                               child: Text(
-                                "LOGIN",
+                                Locs.of(context).trans('login'),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.white,
@@ -681,7 +682,8 @@ class _LoginScreenState extends State<LoginScreen>
                     ),
                   ),
                   Text(
-                    "OR CONNECT WITH",
+                    //TODO: OR CONNECT WITH i18n NOT WORKING ASK JORIS
+                   " Locs.of(context).trans(connect_with)",
                     style: TextStyle(
                       color: Colors.grey,
                       fontWeight: FontWeight.bold,

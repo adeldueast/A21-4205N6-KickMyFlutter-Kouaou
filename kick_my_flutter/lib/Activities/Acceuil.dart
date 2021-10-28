@@ -12,6 +12,7 @@ import 'package:kick_my_flutter/CustomWidgets/Custom_Drawer.dart';
 import 'package:kick_my_flutter/Services/lib_http.dart';
 import 'package:kick_my_flutter/Models/transfer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:kick_my_flutter/i18n/intl_localization.dart';
 
 import 'Consultation.dart';
 
@@ -239,7 +240,8 @@ class _AcceuilState extends State<Acceuil> {
             SystemUiOverlayStyle(statusBarColor: Colors.redAccent),
         backgroundColor: Colors.redAccent,
         centerTitle: true,
-        title: Text("Home"),
+        //TODO: I18N
+        title: Text("Locs.of(context).trans('home')"),
       ),
       body: _isLoading
           ? SpinKitThreeBounce(
