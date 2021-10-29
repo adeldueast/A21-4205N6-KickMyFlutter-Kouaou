@@ -15,12 +15,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:kick_my_flutter/i18n/intl_localization.dart';
 
 import 'Consultation.dart';
-enum Status {
-  loading,
-  success,
-  error,
-  paused
-}
+
+enum Status { loading, success, error, paused }
+
 // ACCEUIL PAGE
 class Acceuil extends StatefulWidget {
   const Acceuil({
@@ -33,30 +30,33 @@ class Acceuil extends StatefulWidget {
 
 class _AcceuilState extends State<Acceuil> {
   List<HomeItemResponse> _listeTask = [];
-
-  late Status _status ;
+  String? _currentErrorMessage;
+  late Status _status;
 
   Future<void> _httpGetListTask() async {
-
-    setState(() {_status = Status.loading;});
+    setState(() {
+      _status = Status.loading;
+    });
     try {
-
       // afficher
       _listeTask = await getListTask();
       // arreter
-      setState(() {_status = Status.success;});
-
+      setState(() {
+        _status = Status.success;
+      });
     } on DioError catch (e) {
-
       // arreter
-      setState(() {_status = Status.error;});
+      setState(() {
+        _status = Status.error;
+        _currentErrorMessage = e.message;
+      });
       print(e.response!.data);
-
-    } on Error catch(e) {
-
-      setState(() {_status = Status.error;});
+    } on Error catch (e) {
+      setState(() {
+        _status = Status.error;
+        _currentErrorMessage = e.toString();
+      });
     }
-
   }
 
   @override
@@ -77,12 +77,26 @@ class _AcceuilState extends State<Acceuil> {
         //TODO: I18N
         title: Text(Locs.of(context).trans('home')),
       ),
-      body: _status==Status.loading ? SpinKitThreeBounce(
+      body: _status == Status.loading
+          ? SpinKitThreeBounce(
               color: Colors.redAccent,
               size: 40,
-            ):
-            _status==Status.error? SingleChildScrollView():
-            _status==Status.success? AcceuilBody(_listeTask, ()=>_httpGetListTask()):Container(),
+            )
+          : _status == Status.error
+              ? RefreshIndicator(
+                  child: SingleChildScrollView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height,
+                      child: Center(
+                        child: Text(_currentErrorMessage.toString()),
+                      ),
+                    ),
+                  ),
+                  onRefresh: _httpGetListTask)
+              : _status == Status.success
+                  ? AcceuilBody(_listeTask, () => _httpGetListTask())
+                  : Container(),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.redAccent,
         onPressed: () => // Navigator.pushNamed(context, "/screen3"),
@@ -105,7 +119,7 @@ class _AcceuilState extends State<Acceuil> {
   }
 }
 
-class AcceuilBody extends StatelessWidget {
+class AcceuilBody extends StatefulWidget {
   AcceuilBody(
     this._listeTask,
     this.onRefresh,
@@ -115,63 +129,34 @@ class AcceuilBody extends StatelessWidget {
   final Function onRefresh;
 
   @override
+  State<AcceuilBody> createState() => _AcceuilBodyState();
+}
+
+class _AcceuilBodyState extends State<AcceuilBody> {
+  @override
   Widget build(BuildContext context) {
-    return new Container(
-      color: Colors.white,
-      child: CustomRefreshIndicator(
-        builder: (context, child, controller) {
-          /// TODO: Implement your own refresh indicator
-          return Stack(
-            children: <Widget>[
-              AnimatedBuilder(
-                animation: controller,
-                builder: (BuildContext context, _) {
-                  /// This part will be rebuild on every controller change
-                  return Container(
-                    width: 0,
-                    height: 0,
-                  );
+    return
+
+           RefreshIndicator(
+            onRefresh: () {
+
+                return widget.onRefresh();
+
+            },
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              child: ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: widget._listeTask.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return TaskRow(widget._listeTask[index]);
                 },
               ),
-
-              /// Scrollable widget that was provided as [child] argument
-              ///
-              /// TIP:
-              /// You can also wrap [child] with [Transform] widget to also a animate list transform (see example app)
-              child,
-            ],
-          );
-        },
-        onRefresh: () => onRefresh(),
-        child: new CustomScrollView(
-          scrollDirection: Axis.vertical,
-          slivers: <Widget>[
-            new SliverPadding(
-              padding: const EdgeInsets.symmetric(vertical: 18.0),
-              sliver: new SliverFixedExtentList(
-                itemExtent: 152.0,
-                delegate: new SliverChildBuilderDelegate(
-                  (context, index) => GestureDetector(
-                      onTap: () {
-                        //Navigator.pushNamed(context, "/screen4", arguments: _listeTask[index].id!);
-                        //TODO:  removed/enlevé  le !null condition   <<< if (_listeTask[index].id != null) >>> because : The operand can't be null, so the condition is always true.
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                Consultation(id: _listeTask[index].id),
-                          ),
-                        );
-                      },
-                      child: new TaskRow(_listeTask[index])),
-                  childCount: _listeTask.length,
-                ),
-              ),
             ),
-          ],
-        ),
-      ),
-    );
+          );
+
+
   }
 }
 
@@ -273,7 +258,6 @@ class TaskRow extends StatelessWidget {
             //"http://10.0.2.2:8080/file/baby/"+task.id.toString()
             child: ClipOval(
               child: CachedNetworkImage(
-
                 placeholder: (context, url) =>
                     const CircularProgressIndicator(),
                 errorWidget: (context, url, error) => Icon(
@@ -281,8 +265,11 @@ class TaskRow extends StatelessWidget {
                   size: 40,
                   color: Colors.redAccent,
                 ),
-                imageUrl:
-                    "http://10.0.2.2:8080/file/baby/" + task.id.toString()+"?&width="+"100",width: 100,
+                imageUrl: "http://10.0.2.2:8080/file/baby/" +
+                    task.id.toString() +
+                    "?&width=" +
+                    "100",
+                width: 100,
                 fit: BoxFit.cover,
               ),
             )));

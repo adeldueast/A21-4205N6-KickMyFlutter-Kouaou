@@ -8,12 +8,12 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 
 class SingletonDio {
   static var cookieManager = CookieManager(CookieJar());
- static  BaseOptions options = new BaseOptions(
+/* static  BaseOptions options = new BaseOptions(
    connectTimeout: 5000,
     receiveTimeout: 3000,
-  );
+  );*/
   static Dio getDio() {
-    Dio dio = Dio(options);
+    Dio dio = Dio();
     dio.interceptors.add(cookieManager);
     return dio;
   }
