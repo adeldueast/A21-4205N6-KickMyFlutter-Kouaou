@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -66,6 +67,7 @@ class _ConsultationState extends State<Consultation> {
         });
 
         await addImageToTask(formData);
+        NetworkImage("http://10.0.2.2:8080/file/baby/" +id.toString()+"?&width="+"100").evict();
       }
       await updateTaskPourcentage(id, valeur);
 
@@ -179,11 +181,23 @@ class _ConsultationState extends State<Consultation> {
                               child: Container(
                                 width: double.infinity,
                                 //  color: Colors.red,
-                                child: Center(
-                                    child: Text(
-                                  Locs.of(context).trans("no_image_selected"),
-                                  style: TextStyle(fontSize: 30),
-                                )),
+                                child: CachedNetworkImage(
+                                  placeholder: (context, url) =>
+                                  const CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) => DottedBorder(
+                                    child: Container(
+                                      width: double.infinity,
+                                      //  color: Colors.red,
+                                      child: Center(
+                                          child: Text(
+                                            Locs.of(context).trans("no_image_selected"),
+                                            style: TextStyle(fontSize: 20),
+                                          )),
+                                    ),
+                                  ),
+                                  imageUrl:
+                                  "http://10.0.2.2:8080/file/baby/" + widget.id.toString()+"?&width="+"100",width: 100, fit: BoxFit.contain,
+                                ),
                               ),
                             ),
                     ),

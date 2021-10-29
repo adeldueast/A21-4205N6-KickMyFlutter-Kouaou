@@ -15,7 +15,12 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:kick_my_flutter/i18n/intl_localization.dart';
 
 import 'Consultation.dart';
-
+enum Status {
+  loading,
+  success,
+  error,
+  paused
+}
 // ACCEUIL PAGE
 class Acceuil extends StatefulWidget {
   const Acceuil({
@@ -28,205 +33,30 @@ class Acceuil extends StatefulWidget {
 
 class _AcceuilState extends State<Acceuil> {
   List<HomeItemResponse> _listeTask = [];
-  bool _isLoading = false;
 
-  //TODO : Ancien button pour addtask dans le showmodalSheet
-  /*Widget _addTaskButton(
-    String newTaskName,
-    DateTime newTaskDate,
-    String newTaskDateText,
-  ) {
-    return MaterialButton(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-      color: Colors.redAccent,
-      onPressed: () async {
-        if (newTaskDate == null ||
-            newTaskName.isEmpty ||
-            newTaskDateText.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text("Make sure you picked a name and a  date")));
-        } else {
-          try {
-            AddTaskRequest req = AddTaskRequest();
-            req.name = newTaskName;
-            req.deadline = newTaskDate;
-            await addTask(req);
-          } on DioError catch (e) {
-            print(e.response!.statusMessage);
-            print(e.response!.statusCode);
-          }
-          HTTPgetListTask();
-          Navigator.pop(context);
-          //setState(() {});
-        }
-      },
-      child: Text("Add task",
-          style: TextStyle(
-              fontSize: 34,
-              color: Colors.white,
-              decoration: TextDecoration.underline)),
-    );
-  }*/
-  //TODO : Ancien _showDatePicker pour addtask dans le showmodalSheet
-  /*Future<DateTime?> _selectDate(BuildContext context) async {
-    FocusScope.of(context).requestFocus(new FocusNode());
-    await Future.delayed(Duration(milliseconds: 90));
-
-    DateTime? newDateTime = await showRoundedDatePicker(
-        context: context,
-        theme: ThemeData(
-          primaryColor: Colors.redAccent[100],
-          accentColor: Colors.redAccent,
-          textTheme: TextTheme(button: TextStyle(color: Colors.redAccent)),
-        ),
-        description:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        fontFamily: 'Poppins');
-    if (newDateTime != null) {
-      final DateFormat formatter = DateFormat.yMMMMd('en_US');
-      final String formatted = formatter.format(newDateTime);
-      // print(formatted); // something like 2013-04-20
-
-      return newDateTime;
-    }
-    return newDateTime;
-  }*/
-  //TODO : Ancien _showModalBottomSheet pour addtask dans le showmodalSheet
-  /*void _showModalBottomSheet() {
-    DateTime? newTaskDate = DateTime.now();
-    late String newTaskName = "";
-    late String newTaskDateText = "";
-    showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(builder: (context, state) {
-            return GestureDetector(
-              onTap: () {
-                //Permet de fermer le keyboard lorsqu'on clique ailleurs du TextField
-                FocusScopeNode currentFocus = FocusScope.of(context);
-                if (!currentFocus.hasPrimaryFocus) {
-                  currentFocus.unfocus();
-                }
-              },
-              child: Padding(
-                // TODO : BottomSheet reste par dessus le clavier sinon pas derreur mais il est caché derrière le keyboard
-                padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom),
-                //BottomSheet Container
-                child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    color: Colors.redAccent[100],
-                    height: MediaQuery.of(context).size.height * 0.34,
-                    child: Column(
-                      children: [
-                        // Title Create a task
-                        Container(
-                          child: _addTaskButton(
-                              newTaskName, newTaskDate!, newTaskDateText),
-                        ),
-                        //ROW TextField & Calendar
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 19),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 4,
-                                child: TextField(
-                                  onChanged: (text) {
-                                    newTaskName = text;
-                                    print("text changing ... task name " +
-                                        newTaskName);
-                                  },
-                                  decoration: InputDecoration(
-                                    labelText: 'Task name',
-                                    labelStyle: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w300),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(13),
-                                        borderSide: BorderSide(
-                                            color: Colors.white, width: 5)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(13),
-                                        borderSide: BorderSide(
-                                            color: Colors.white, width: 5)),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 19),
-                                  padding: EdgeInsets.only(bottom: 14),
-                                  child: IconButton(
-                                    iconSize: 60,
-                                    icon: Icon(FontAwesomeIcons.calendarCheck),
-                                    color: Colors.white,
-                                    onPressed: () async {
-                                      newTaskDate =
-                                          (await _selectDate(context))!;
-                                      final DateFormat formatter =
-                                          DateFormat.yMMMMd('en_US');
-                                      final String formatted =
-                                          formatter.format(newTaskDate!);
-                                      newTaskDateText = formatted;
-
-                                      print("new task --->>" +
-                                          newTaskName +
-                                          " " +
-                                          formatted);
-                                      state(() {});
-                                    },
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        //Date : 20 September 2021
-
-                        Container(
-                          margin: EdgeInsets.only(left: 18),
-                          padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-
-                          alignment: Alignment.centerLeft,
-                          // color:Colors.blue,
-                          child: Text("Date : " + newTaskDateText,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 26,
-                                  fontStyle: FontStyle.italic)),
-                        ),
-                      ],
-                    )),
-              ),
-            );
-          });
-        });
-  }*/
+  late Status _status ;
 
   Future<void> _httpGetListTask() async {
-    setState(() {
-      _isLoading = true;
-    });
+
+    setState(() {_status = Status.loading;});
     try {
+
       // afficher
       _listeTask = await getListTask();
       // arreter
-      /*  for (var o in _listeTask) {
-        print(o.toString());
-      }*/
+      setState(() {_status = Status.success;});
+
     } on DioError catch (e) {
+
       // arreter
+      setState(() {_status = Status.error;});
       print(e.response!.data);
+
+    } on Error catch(e) {
+
+      setState(() {_status = Status.error;});
     }
 
-
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   @override
@@ -247,15 +77,12 @@ class _AcceuilState extends State<Acceuil> {
         //TODO: I18N
         title: Text(Locs.of(context).trans('home')),
       ),
-      body: _isLoading
-          ? SpinKitThreeBounce(
+      body: _status==Status.loading ? SpinKitThreeBounce(
               color: Colors.redAccent,
               size: 40,
-            )
-          : Container(
-              color: Colors.white,
-              child: new AcceuilBody(_listeTask, _httpGetListTask),
-            ),
+            ):
+            _status==Status.error? SingleChildScrollView():
+            _status==Status.success? AcceuilBody(_listeTask, ()=>_httpGetListTask()):Container(),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.redAccent,
         onPressed: () => // Navigator.pushNamed(context, "/screen3"),
