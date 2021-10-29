@@ -68,6 +68,7 @@ class _ConsultationState extends State<Consultation> {
 
         await addImageToTask(formData);
         NetworkImage("http://10.0.2.2:8080/file/baby/" +id.toString()+"?&width="+"100").evict();
+        NetworkImage("http://10.0.2.2:8080/file/baby/" +id.toString()).evict();
       }
       await updateTaskPourcentage(id, valeur);
 
@@ -196,7 +197,7 @@ class _ConsultationState extends State<Consultation> {
                                     ),
                                   ),
                                   imageUrl:
-                                  "http://10.0.2.2:8080/file/baby/" + widget.id.toString()+"?&width="+"100",width: 100, fit: BoxFit.contain,
+                                  "http://10.0.2.2:8080/file/baby/" + widget.id.toString(),width: 100, fit: BoxFit.contain,
                                 ),
                               ),
                             ),
