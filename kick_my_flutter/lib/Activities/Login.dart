@@ -78,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen>
 
       if (message =="InternalAuthenticationServiceException"){
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(       Locs.of(context).trans("wrong_infos"))));
+            .showSnackBar(SnackBar(content: Text(Locs.of(context).trans("wrong_infos"))));
       }
       else{
         ScaffoldMessenger.of(context)
@@ -220,7 +220,7 @@ class _LoginScreenState extends State<LoginScreen>
   Widget signupPage() {
     return SingleChildScrollView(
       child: new Container(
-        height: MediaQuery.of(context).size.height,
+
         decoration: BoxDecoration(
           color: Colors.white,
         ),
@@ -467,7 +467,7 @@ class _LoginScreenState extends State<LoginScreen>
   Widget loginPage() {
     return SingleChildScrollView(
       child: new Container(
-        height: MediaQuery.of(context).size.height,
+
         decoration: BoxDecoration(
           color: Colors.white,
         ),
@@ -618,11 +618,14 @@ class _LoginScreenState extends State<LoginScreen>
               child: new Row(
                 children: <Widget>[
                   new Expanded(
-                    child: new FlatButton(
-                      shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(30.0),
-                      ),
-                      color: Colors.redAccent,
+                    child: new ElevatedButton(
+                     style: ElevatedButton.styleFrom(
+                       shape: new RoundedRectangleBorder(
+                         borderRadius: new BorderRadius.circular(30.0),
+                       ),
+                       primary: Colors.redAccent,
+                     ),
+
 
                       // ON PRESS TO PAGE ACCUEUIL NAVIG.ROUTE SCREEN2
                       onPressed: isLoadingSignInButton ? null : ()=> _toggleButtonSignIn(),
@@ -664,9 +667,7 @@ class _LoginScreenState extends State<LoginScreen>
                           BoxDecoration(border: Border.all(width: 0.25)),
                     ),
                   ),
-                  Text(
-                    //TODO: OR CONNECT WITH i18n NOT WORKING ASK JORIS
-                   " Locs.of(context).trans(connect_with)",
+                  Text(Locs.of(context).trans("connect_with"),
                     style: TextStyle(
                       color: Colors.grey,
                       fontWeight: FontWeight.bold,
@@ -816,24 +817,6 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  PageController _controller =
-      new PageController(initialPage: 1, viewportFraction: 1.0);
-
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-
-        body: Container(
-          height: MediaQuery.of(context).size.height,
-          child: PageView(
-            controller: _controller,
-            physics: new AlwaysScrollableScrollPhysics(),
-            children: [loginPage(), homePage(), signupPage()],
-            scrollDirection: Axis.horizontal,
-          )),
-    );
-  }
-
 
   _toggleButtonSignUp() async{
     try {
@@ -894,5 +877,24 @@ class _LoginScreenState extends State<LoginScreen>
     }
     await httpSignin();
 
+  }
+
+
+  PageController _controller =
+  new PageController(initialPage: 1, viewportFraction: 1.0);
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      resizeToAvoidBottomInset:false,
+      body: Container(
+          height: MediaQuery.of(context).size.height,
+          child: PageView(
+            controller: _controller,
+            physics: new AlwaysScrollableScrollPhysics(),
+            children: [loginPage(), homePage(), signupPage()],
+            scrollDirection: Axis.horizontal,
+          )),
+    );
   }
 }
