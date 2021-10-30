@@ -6,6 +6,10 @@
   "forgot_password" : "Forgot password?",
   "acc_already_exist" : "Already have an account?",
 
+  "username_empty": "Username field is empty",
+  "passwords_empty": "Password field is empty",
+
+
   "login" : "LOGIN",
   "signup" : "SIGNUP",
 

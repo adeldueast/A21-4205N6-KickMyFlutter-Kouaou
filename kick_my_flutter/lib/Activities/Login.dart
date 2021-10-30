@@ -21,7 +21,13 @@ class _LoginScreenState extends State<LoginScreen>
   String signinUsername = "";
   String signinPassword = "";
 
-  void httpSignup() async {
+  bool isLoadingSignUpButton =false;
+  setLoadingSignUpButton(bool state) => setState(() => isLoadingSignUpButton = state);
+
+  bool isLoadingSignInButton =false;
+  setLoadingSignInButton(bool state) => setState(() => isLoadingSignInButton = state);
+
+  Future<void> httpSignup() async {
     try {
       SignupRequest request = SignupRequest();
       request.username = signupUsername;
@@ -52,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen>
     }
   }
 
-  void httpSignin() async {
+  Future<void> httpSignin() async {
     try {
       SigninRequest request = SigninRequest();
       request.username = signinUsername;
@@ -419,23 +425,14 @@ class _LoginScreenState extends State<LoginScreen>
               child: new Row(
                 children: <Widget>[
                   new Expanded(
-                    child: new FlatButton(
-                      shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(30.0),
+                    child: new ElevatedButton(
+                      onPressed: isLoadingSignUpButton ? null : ()=> _toggleButtonSignUp(),
+                      style: ElevatedButton.styleFrom(
+                        shape: new RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(30.0),
+                        ),
+                        primary: Colors.redAccent,
                       ),
-                      color: Colors.redAccent,
-                      onPressed: () {
-                        //validation de mot de passes 1 & 2
-                        if (this.signupPW1 != this.signupPW2) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(
-                                Locs.of(context).trans('both_password_identical'),)));
-                          return;
-                        }
-
-                        //requet signup
-                        httpSignup();
-                      },
                       child: new Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 20.0,
@@ -628,21 +625,7 @@ class _LoginScreenState extends State<LoginScreen>
                       color: Colors.redAccent,
 
                       // ON PRESS TO PAGE ACCUEUIL NAVIG.ROUTE SCREEN2
-                      onPressed: () {
-                        //TODO : The operand can't be null, so the condition is always false. ?? i decided to keep it this way just in case..
-                        if (this.signinUsername.isEmpty ||
-                            this.signinUsername == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(Locs.of(context).trans('username_empty'))));
-                          return;
-                        } else if (this.signinPassword.isEmpty ||
-                            this.signinPassword == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(Locs.of(context).trans("password_empty"))));
-                          return;
-                        }
-                        httpSignin();
-                      },
+                      onPressed: isLoadingSignInButton ? null : ()=> _toggleButtonSignIn(),
                       child: new Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: 20.0,
@@ -849,5 +832,67 @@ class _LoginScreenState extends State<LoginScreen>
             scrollDirection: Axis.horizontal,
           )),
     );
+  }
+
+
+  _toggleButtonSignUp() async{
+    try {
+      setLoadingSignUpButton(true);
+      await _httpSignUP();
+    } finally {
+      setLoadingSignUpButton(false);
+    }
+  }
+
+  Future<void>_httpSignUP() async{
+    //validation de mot de passes 1 & 2
+    if(this.signupUsername.isEmpty){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            Locs.of(context).trans("username_empty"),)));
+      return;
+    }
+    if (this.signupPW1.isEmpty || this.signupPW2.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            Locs.of(context).trans('passwords_empty'),)));
+      return;
+    }
+
+    if (this.signupPW1 != this.signupPW2) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            Locs.of(context).trans('both_password_identical'),)));
+      return;
+    }
+
+
+    //requet signup
+   await httpSignup();
+
+  }
+
+  _toggleButtonSignIn() async{
+    try {
+      setLoadingSignInButton(true);
+      await _httpSignIN();
+    } finally {
+      setLoadingSignInButton(false);
+    }
+  }
+
+  Future<void>_httpSignIN() async{
+    //TODO : The operand can't be null, so the condition is always false. ?? i decided to keep it this way just in case..
+    if (this.signinUsername.isEmpty || this.signinUsername == null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(Locs.of(context).trans('username_empty'))));
+      return;
+    } else if (this.signinPassword.isEmpty || this.signinPassword == null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(Locs.of(context).trans("password_empty"))));
+      return;
+    }
+    await httpSignin();
+
   }
 }

@@ -11,8 +11,6 @@ import 'package:kick_my_flutter/i18n/intl_localization.dart';
 import '../CustomWidgets/Custom_Textfield.dart';
 import '../Services/lib_http.dart';
 
-
-
 class AddTask extends StatefulWidget {
   const AddTask({Key? key}) : super(key: key);
 
@@ -25,6 +23,8 @@ class _AddTaskState extends State<AddTask> {
   DateTime? newTaskDate;
   String newTaskName = "";
   String newTaskDateText = "";
+   bool isLoading =false;
+  setLoading(bool state) => setState(() => isLoading = state);
 
   Future<DateTime?> _selectDate(BuildContext context) async {
     /*FocusScope.of(context).requestFocus(new FocusNode());
@@ -54,16 +54,15 @@ class _AddTaskState extends State<AddTask> {
     print("rebuilding Date with --> " + newTaskDateText);
 
     return GestureDetector(
-        onTap: () {
-          //Permet de fermer le keyboard lorsqu'on clique ailleurs du TextField
-          FocusScopeNode currentFocus = FocusScope.of(context);
-          if (!currentFocus.hasPrimaryFocus) {
-            currentFocus.unfocus();
-          }
-        },
+      onTap: () {
+        //Permet de fermer le keyboard lorsqu'on clique ailleurs du TextField
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
       child: Scaffold(
-          drawer: MyCustomDrawer(
-          ),
+          drawer: MyCustomDrawer(),
           appBar: AppBar(
             centerTitle: true,
             backgroundColor: Colors.redAccent,
@@ -113,7 +112,8 @@ class _AddTaskState extends State<AddTask> {
                             child: IconButton(
                               onPressed: () async {
                                 //Permet de fermer le keyboard lorsqu'on clique ailleurs du TextField
-                                FocusScopeNode currentFocus = FocusScope.of(context);
+                                FocusScopeNode currentFocus =
+                                    FocusScope.of(context);
                                 if (!currentFocus.hasPrimaryFocus) {
                                   currentFocus.unfocus();
                                 }
@@ -128,8 +128,9 @@ class _AddTaskState extends State<AddTask> {
                                 else
                                   newTaskDateText = "";
 
-                                print("before setState Title : "+ newTaskName);
-                                print("before setState Date : "+ newTaskDateText);
+                                print("before setState Title : " + newTaskName);
+                                print("before setState Date : " +
+                                    newTaskDateText);
 
                                 setState(() {});
                               },
@@ -142,43 +143,20 @@ class _AddTaskState extends State<AddTask> {
                   ],
                 ),
               ),
-              Expanded(child: Container(
+              Expanded(
+                  child: Container(
                 alignment: Alignment.center,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(23))),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(23))),
                       primary: Colors.redAccent,
-                      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 17),
-                      textStyle: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold)),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 40, vertical: 17),
+                      textStyle:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                   child: Text(Locs.of(context).trans("add_+")),
-
-                  onPressed: () async {
-
-                      if(newTaskName.isEmpty||newTaskDate==null||newTaskName =="")
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(Locs.of(context).trans("invalid_create_task"))));
-                      else{
-                        try {
-                          AddTaskRequest req = AddTaskRequest();
-                          req.name = newTaskName;
-                          req.deadLine = newTaskDate!;
-                          print(req.name);
-                          print(req.deadLine);
-                          await addTask(req);
-                        } on DioError catch (e) {
-                          print(e.response!.statusMessage);
-                          print(e.response!.statusCode);
-                        }
-
-                        Navigator.pushReplacementNamed(context, "/screen2");
-
-
-                      }
-
-
-                  },
+                  onPressed: isLoading ? null : ()=> _toggleButton(),
                 ),
               ))
             ],
@@ -186,8 +164,37 @@ class _AddTaskState extends State<AddTask> {
     );
   }
 
+
+  _toggleButton() async{
+    try {
+      setLoading(true);
+      await _addTask();
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  _addTask() async{
+    if (newTaskName.isEmpty ||
+        newTaskDate == null ||
+        newTaskName == "")
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+              Locs.of(context).trans("invalid_create_task"))));
+    else {
+      try {
+        AddTaskRequest req = AddTaskRequest();
+        req.name = newTaskName;
+        req.deadLine = newTaskDate!;
+        print(req.name);
+        print(req.deadLine);
+        await addTask(req);
+        Navigator.pushReplacementNamed(context, "/screen2");
+      } on DioError catch (e) {
+        print(e.response!.statusMessage);
+        print(e.response!.statusCode);
+      }
+    }
+
+  }
 }
-
-
-
-

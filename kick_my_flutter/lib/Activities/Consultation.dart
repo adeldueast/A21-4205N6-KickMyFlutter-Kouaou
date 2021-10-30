@@ -31,10 +31,11 @@ class _ConsultationState extends State<Consultation> {
 
   // TODO: Turned slider into a function that returns a Widget So I could use it, otherwise... Error:  The instance member '_taskDetailResponse' can't be accessed in an initializer.
   late Status _status;
-
   bool _showToolTip = true;
   TaskDetailResponse? _taskDetailResponse;
   String? _currentErrorMessage;
+  bool isLoading =false;
+  setLoading(bool state) => setState(() => isLoading = state);
 
   late int _newProgressionTaskValue;
   XFile? pickedImage;
@@ -68,7 +69,7 @@ class _ConsultationState extends State<Consultation> {
     }
   }
 
-  void _updateTaskDetails(int id, int valeur) async {
+  Future<void> _updateTaskDetails(int id, int valeur) async {
     try {
       if (pickedImage != null) {
         //debug purpose
@@ -89,6 +90,7 @@ class _ConsultationState extends State<Consultation> {
 
         //NetworkImage("http://10.0.2.2:8080/file/baby/" + id.toString()).evict();
       }
+      await  Future.delayed(Duration(seconds: 5));
       await updateTaskPourcentage(id, valeur);
 
       //go back to acceuil
@@ -256,8 +258,7 @@ class _ConsultationState extends State<Consultation> {
                                       vertical: 5, horizontal: 12)),
                               backgroundColor: MaterialStateColor.resolveWith(
                                   (states) => Colors.redAccent)),
-                          onPressed: () => _updateTaskDetails(
-                              widget.id, _newProgressionTaskValue),
+                          onPressed: isLoading ? null : ()=> _toggleButton(),
                           child: Text(
                             Locs.of(context).trans("save"),
                             style: TextStyle(
@@ -350,5 +351,14 @@ class _ConsultationState extends State<Consultation> {
         onChange: (double value) {
           _newProgressionTaskValue = value.toInt();
         });
+  }
+
+  _toggleButton() async{
+    try {
+      setLoading(true);
+      await _updateTaskDetails(widget.id, _newProgressionTaskValue);
+    } finally {
+      setLoading(false);
+    }
   }
 }

@@ -6,6 +6,9 @@
   "forgot_password" : "Mot de passe oublié?",
   "acc_already_exist" : "Vous avez déjà un compte?",
 
+  "username_empty": "Champ Username est vide",
+  "passwords_empty": "Champ mot de passe vide",
+
   "login" : "SE CONNECTER",
   "signup" : "S'INSCRIRE",
 
@@ -36,6 +39,8 @@
   "save": "Sauvegarder",
   "select_image": "Selectionnez une image",
   "slide_tooltip": "Glisser pour changer la progression"
+
+
 
 
 }

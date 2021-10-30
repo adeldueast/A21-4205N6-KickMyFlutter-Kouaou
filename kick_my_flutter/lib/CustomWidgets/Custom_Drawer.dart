@@ -10,7 +10,8 @@ class MyCustomDrawer extends StatefulWidget {
 
 class _MyCustomDrawerState extends State<MyCustomDrawer> {
   int _selectedDestination = 0;
-
+  bool isLoading =false;
+  setLoading(bool state) => setState(() => isLoading = state);
   void selectDestination(int index) {
     setState(() {
       _selectedDestination = index;
@@ -78,15 +79,30 @@ class _MyCustomDrawerState extends State<MyCustomDrawer> {
                 leading: Icon(Icons.logout_outlined),
                 title: Text(Locs.of(context).trans('logout')),
                 selected: _selectedDestination == 2,
-                onTap: () => {
-                  selectDestination(2),
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      '/screen1', (Route<dynamic> route) => false),
-                  logout(),
-                },
+                onTap: isLoading ? null : ()=> _toggleButton(),
               ),
             ],
           ),
         ));
+  }
+
+
+  _toggleButton() async{
+    try {
+      setLoading(true);
+      await _logout();
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  _logout() async{
+
+
+    await logout();
+    selectDestination(2);
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        '/screen1', (Route<dynamic> route) => false);
+
   }
 }
