@@ -71,37 +71,38 @@ class _AcceuilState extends State<Acceuil> {
       drawer: MyCustomDrawer(),
       appBar: AppBar(
         systemOverlayStyle:
-            SystemUiOverlayStyle(statusBarColor: Colors.redAccent),
+        SystemUiOverlayStyle(statusBarColor: Colors.redAccent),
         backgroundColor: Colors.redAccent,
         centerTitle: true,
         //TODO: I18N
         title: Text(Locs.of(context).trans('home')),
       ),
-      body: _status == Status.loading
-          ? SpinKitThreeBounce(
-              color: Colors.redAccent,
-              size: 40,
-            )
-          : _status == Status.error
-              ? RefreshIndicator(
-                  child: SingleChildScrollView(
-                    physics: AlwaysScrollableScrollPhysics(),
-                    child: Container(
-                      height: MediaQuery.of(context).size.height,
-                      child: Center(
-                        child: Text(_currentErrorMessage.toString()),
-                      ),
-                    ),
-                  ),
-                  onRefresh: _httpGetListTask)
-              : _status == Status.success
-                  ? AcceuilBody(_listeTask, () => _httpGetListTask())
-                  : Container(),
+      body: _status == Status.loading ? SpinKitThreeBounce(
+        color: Colors.redAccent,
+        size: 40,
+      ) :
+      _status == Status.error ? RefreshIndicator(
+          child: SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: Container(
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height,
+              child: Center(
+                child: Text(_currentErrorMessage.toString()),
+              ),
+            ),
+          ),
+          onRefresh: _httpGetListTask) :
+      _status == Status.success ? AcceuilBody(
+          _listeTask, () => _httpGetListTask()) :
+      Container(),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.redAccent,
         onPressed: () => // Navigator.pushNamed(context, "/screen3"),
-            //  _showModalBottomSheet(),
-            Navigator.pushNamed(context, "/screen3"),
+        //  _showModalBottomSheet(),
+        Navigator.pushNamed(context, "/screen3"),
         child: Icon(
           Icons.add,
           size: 42,
@@ -120,10 +121,8 @@ class _AcceuilState extends State<Acceuil> {
 }
 
 class AcceuilBody extends StatefulWidget {
-  AcceuilBody(
-    this._listeTask,
-    this.onRefresh,
-  );
+  AcceuilBody(this._listeTask,
+      this.onRefresh,);
 
   final List<HomeItemResponse> _listeTask;
   final Function onRefresh;
@@ -137,26 +136,39 @@ class _AcceuilBodyState extends State<AcceuilBody> {
   Widget build(BuildContext context) {
     return
 
-           RefreshIndicator(
-            onRefresh: () {
+      RefreshIndicator(
+        onRefresh: () {
+          return widget.onRefresh();
+        },
+        child: Container(
+          height: MediaQuery
+              .of(context)
+              .size
+              .height,
+          child: ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
+            itemCount: widget._listeTask.length,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                child: TaskRow(widget._listeTask[index]),
+                onTap: (){
+                  //Navigator.pushNamed(context, "/screen4", arguments: _listeTask[index].id!);
+                  //TODO:  removed/enlevé  le !null condition   <<< if (_listeTask[index].id != null) >>> because : The operand can't be null, so the condition is always true.
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          Consultation(id:  widget._listeTask[index].id),
+                    ),
+                  );
 
-                return widget.onRefresh();
-
-            },
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              child: ListView.builder(
-                physics: const AlwaysScrollableScrollPhysics(),
-                itemCount: widget._listeTask.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return TaskRow(widget._listeTask[index]);
                 },
-              ),
-            ),
-          );
-
-
+              );
+            },
+          ),
+        ),
+      );
   }
 }
 
@@ -173,11 +185,11 @@ class TaskRow extends StatelessWidget {
         color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.w600);
 
     final regularTextStyle = baseTextStyle.copyWith(
-        // color: const Color(0xffb6b2df),
+      // color: const Color(0xffb6b2df),
         fontSize: 9.0,
         fontWeight: FontWeight.w400);
     final subHeaderTextStyle =
-        regularTextStyle.copyWith(fontSize: 12.0, color: Colors.white);
+    regularTextStyle.copyWith(fontSize: 12.0, color: Colors.white);
 
     final taskCardContent = new Container(
       margin: new EdgeInsets.fromLTRB(76.0, 16.0, 16.0, 8.0),
@@ -204,27 +216,29 @@ class TaskRow extends StatelessWidget {
               Expanded(
                 child: Container(
                     child: Stack(
-                  children: <Widget>[
-                    SizedBox(
-                      height: 20,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                        child: LinearProgressIndicator(
-                          value: task.percentageTimeSpent.toDouble() / 100,
-                          backgroundColor: Colors.white,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                      children: <Widget>[
+                        SizedBox(
+                          height: 20,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            child: LinearProgressIndicator(
+                              value: task.percentageTimeSpent.toDouble() / 100,
+                              backgroundColor: Colors.white,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.red),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    Align(
-                      child: Text((task.percentageTimeSpent.toDouble() / 100)
+                        Align(
+                          child: Text((task.percentageTimeSpent.toDouble() /
+                              100)
                               .round()
                               .toString() +
-                          " %"),
-                      alignment: Alignment.topCenter,
-                    ),
-                  ],
-                )),
+                              " %"),
+                          alignment: Alignment.topCenter,
+                        ),
+                      ],
+                    )),
                 flex: 1,
               ),
               Flexible(
@@ -259,12 +273,14 @@ class TaskRow extends StatelessWidget {
             child: ClipOval(
               child: CachedNetworkImage(
                 placeholder: (context, url) =>
-                    const CircularProgressIndicator(),
-                errorWidget: (context, url, error) => Icon(
-                  FontAwesomeIcons.list,
-                  size: 40,
-                  color: Colors.redAccent,
-                ),
+
+                const CircularProgressIndicator(),
+                errorWidget: (context, url, error) =>
+                    Icon(
+                      FontAwesomeIcons.list,
+                      size: 40,
+                      color: Colors.redAccent,
+                    ),
                 imageUrl: "http://10.0.2.2:8080/file/baby/" +
                     task.id.toString() +
                     "?&width=" +

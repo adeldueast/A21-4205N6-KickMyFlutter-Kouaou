@@ -15,6 +15,8 @@ import '../CustomWidgets/Custom_Textfield.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
 
+import 'Acceuil.dart';
+
 class Consultation extends StatefulWidget {
   final int id;
 
@@ -28,30 +30,42 @@ class _ConsultationState extends State<Consultation> {
   // TODO: ask joris about state building while object is null throwing. Error: Null check operator used on a null value for flutter. Meanwhile, we fixed it by using a loader that only load when the httprequest is done , otherwise loading effect.
 
   // TODO: Turned slider into a function that returns a Widget So I could use it, otherwise... Error:  The instance member '_taskDetailResponse' can't be accessed in an initializer.
-  bool _isLoading = false;
+  late Status _status;
+
   bool _showToolTip = true;
   TaskDetailResponse? _taskDetailResponse;
+  String? _currentErrorMessage;
 
   late int _newProgressionTaskValue;
   XFile? pickedImage;
   String pickedImagePath = "";
   ImagePicker picker = new ImagePicker();
 
-  void _getTaskDetail(int id) async {
+  Future<void> _getTaskDetail(int id) async {
     setState(() {
-      _isLoading = true;
+      _status = Status.loading;
     });
     try {
       this._taskDetailResponse = await getTaskDetail(id);
       _newProgressionTaskValue = _taskDetailResponse!.percentageDone;
       print(_taskDetailResponse.toString());
+      setState(() {
+        _status = Status.success;
+      });
     } on DioError catch (e) {
       print(e.response);
       print(e.message);
+      setState(() {
+        _status = Status.error;
+        _currentErrorMessage = e.message;
+      });
+    } on Error catch (e) {
+      print(e);
+      setState(() {
+        _status = Status.error;
+        _currentErrorMessage = e.toString();
+      });
     }
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   void _updateTaskDetails(int id, int valeur) async {
@@ -67,8 +81,13 @@ class _ConsultationState extends State<Consultation> {
         });
 
         await addImageToTask(formData);
-        NetworkImage("http://10.0.2.2:8080/file/baby/" +id.toString()+"?&width="+"100").evict();
-        NetworkImage("http://10.0.2.2:8080/file/baby/" +id.toString()).evict();
+        await CachedNetworkImage.evictFromCache("http://10.0.2.2:8080/file/baby/" +
+            id.toString() +
+            "?&width=" +
+            "100");
+        await CachedNetworkImage.evictFromCache("http://10.0.2.2:8080/file/baby/" + id.toString());
+
+        //NetworkImage("http://10.0.2.2:8080/file/baby/" + id.toString()).evict();
       }
       await updateTaskPourcentage(id, valeur);
 
@@ -99,12 +118,11 @@ class _ConsultationState extends State<Consultation> {
       appBar: AppBar(
         backgroundColor: Colors.redAccent,
       ),
-      body: _isLoading
-          ? SpinKitThreeBounce(
+      body: _status==Status.loading ? SpinKitThreeBounce(
               color: Colors.redAccent,
               size: 40,
-            )
-          : Container(
+            ):
+            _status==Status.success?  Container(
               //    color: Colors.green,
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
 
@@ -184,20 +202,24 @@ class _ConsultationState extends State<Consultation> {
                                 //  color: Colors.red,
                                 child: CachedNetworkImage(
                                   placeholder: (context, url) =>
-                                  const CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) => DottedBorder(
+                                      const CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      DottedBorder(
                                     child: Container(
                                       width: double.infinity,
                                       //  color: Colors.red,
                                       child: Center(
                                           child: Text(
-                                            Locs.of(context).trans("no_image_selected"),
-                                            style: TextStyle(fontSize: 20),
-                                          )),
+                                        Locs.of(context)
+                                            .trans("no_image_selected"),
+                                        style: TextStyle(fontSize: 20),
+                                      )),
                                     ),
                                   ),
-                                  imageUrl:
-                                  "http://10.0.2.2:8080/file/baby/" + widget.id.toString(),width: 100, fit: BoxFit.contain,
+                                  imageUrl: "http://10.0.2.2:8080/file/baby/" +
+                                      widget.id.toString(),
+                                  width: 100,
+                                  fit: BoxFit.contain,
                                 ),
                               ),
                             ),
@@ -248,7 +270,18 @@ class _ConsultationState extends State<Consultation> {
                   //color: Colors.green,
                 ],
               ),
-            ),
+            ):
+            RefreshIndicator(
+                child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height,
+                    child: Center(
+                      child: Text(_currentErrorMessage.toString()),
+                    ),
+                  ),
+                ),
+                onRefresh:()=>_getTaskDetail(widget.id))
     );
   }
 
