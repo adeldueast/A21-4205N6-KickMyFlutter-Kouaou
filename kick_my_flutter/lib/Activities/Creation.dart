@@ -193,6 +193,11 @@ class _AddTaskState extends State<AddTask> {
       } on DioError catch (e) {
         print(e.response!.statusMessage);
         print(e.response!.statusCode);
+        if(e.response!.statusCode ==400){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+                  Locs.of(context).trans("invalid_create_task_alreadyExist"))));
+        }
       }
     }
 

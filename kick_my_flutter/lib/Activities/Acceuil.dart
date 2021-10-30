@@ -74,7 +74,7 @@ class _AcceuilState extends State<Acceuil> {
         SystemUiOverlayStyle(statusBarColor: Colors.redAccent),
         backgroundColor: Colors.redAccent,
         centerTitle: true,
-        //TODO: I18N
+
         title: Text(Locs.of(context).trans('home')),
       ),
       body: _status == Status.loading ? SpinKitThreeBounce(
@@ -154,7 +154,7 @@ class _AcceuilBodyState extends State<AcceuilBody> {
                 child: TaskRow(widget._listeTask[index]),
                 onTap: (){
                   //Navigator.pushNamed(context, "/screen4", arguments: _listeTask[index].id!);
-                  //TODO:  removed/enlevé  le !null condition   <<< if (_listeTask[index].id != null) >>> because : The operand can't be null, so the condition is always true.
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(

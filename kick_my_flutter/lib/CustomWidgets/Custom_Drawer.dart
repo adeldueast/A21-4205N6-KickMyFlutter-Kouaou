@@ -36,7 +36,7 @@ class _MyCustomDrawerState extends State<MyCustomDrawer> {
                       "https://cdn-icons-png.flaticon.com/512/3135/3135715.png")),
               ListTile(
                   leading: Icon(Icons.home),
-                  //TODO: i18n
+
                   title: Text(Locs.of(context).trans('home')),
 
                   selected: ModalRoute.of(context)!.settings.name == "/screen2",

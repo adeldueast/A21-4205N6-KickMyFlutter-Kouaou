@@ -30,6 +30,7 @@
 
   "create_task" :"Create a task",
   "invalid_create_task": "Make sure you picked a name and a  date",
+  "invalid_create_task_alreadyExist" :"A task with the same name already exist",
   "add_+": "Add +",
   "title": "Title",
 

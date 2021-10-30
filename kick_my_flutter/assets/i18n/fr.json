@@ -29,6 +29,7 @@
 
   "create_task" :"Créer une tâche",
   "invalid_create_task": "Assurez-vous d'entrer un nom et une date",
+  "invalid_create_task_alreadyExist" :"Une tâche avec le même nom existe déjà",
   "add_+": "Ajouter +",
   "title": "Titre",
 

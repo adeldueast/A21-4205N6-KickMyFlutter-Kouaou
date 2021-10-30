@@ -70,13 +70,18 @@ class _LoginScreenState extends State<LoginScreen>
 
       Navigator.of(context).pushReplacementNamed("/screen2");
     } on DioError catch (e) {
-      // TODO
 
       print(e.response);
       print(e.message);
       String message = e.response!.data;
 
+      //TODO: InternalAuthenticationServiceException n'apparait plus dans le nouveau serveur?
       if (message =="InternalAuthenticationServiceException"){
+
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(Locs.of(context).trans("wrong_infos"))));
+      }
+      else if(message =="BadCredentialsException"){
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(Locs.of(context).trans("wrong_infos"))));
       }
@@ -865,7 +870,7 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   Future<void>_httpSignIN() async{
-    //TODO : The operand can't be null, so the condition is always false. ?? i decided to keep it this way just in case..
+
     if (this.signinUsername.isEmpty || this.signinUsername == null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(Locs.of(context).trans('username_empty'))));

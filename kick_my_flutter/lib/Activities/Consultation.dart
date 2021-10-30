@@ -27,7 +27,7 @@ class Consultation extends StatefulWidget {
 }
 
 class _ConsultationState extends State<Consultation> {
-  // TODO: ask joris about state building while object is null throwing. Error: Null check operator used on a null value for flutter. Meanwhile, we fixed it by using a loader that only load when the httprequest is done , otherwise loading effect.
+
 
   // TODO: Turned slider into a function that returns a Widget So I could use it, otherwise... Error:  The instance member '_taskDetailResponse' can't be accessed in an initializer.
   late Status _status;
@@ -179,7 +179,7 @@ class _ConsultationState extends State<Consultation> {
                     ],
                   ),
 
-                  // TODO : TOOL TIP + PROGRESS
+
                   Container(
                     margin: EdgeInsets.only(bottom: 1),
                     //color: Colors.yellow,

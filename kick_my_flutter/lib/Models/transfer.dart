@@ -2,7 +2,6 @@ import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'transfer.g.dart';
 
-// TODO :  SignUP REQUEST returns a RESPONSE
 @JsonSerializable()
 class SignupRequest {
   SignupRequest();
@@ -40,7 +39,7 @@ class SignupResponse {
   Map<String, dynamic> toJson() => _$SignupResponseToJson(this);
 }
 
-// TODO :  Signin  REQUEST / RESPONSE
+
 @JsonSerializable()
 class SigninRequest extends SignupRequest {
   SigninRequest();
